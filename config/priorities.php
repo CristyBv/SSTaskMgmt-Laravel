@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'High',
-    'Medium',
-    'Low',
+    '1' => 'High',
+    '2' => 'Medium',
+    '3' => 'Low',
 ];
 
 ?>

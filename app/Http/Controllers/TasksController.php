@@ -176,15 +176,15 @@ class TasksController extends Controller
         }
             
         $priorities = array();
-        foreach(Config::get('priorities') as $pri){
-            $var = [$pri => $pri];
-            $priorities = array_merge($priorities, $var);
+        foreach(Config::get('priorities') as $id => $pri) {
+            $var = [$id => $pri];
+            $priorities = $priorities + $var;
         }
 
         $status = array();
-        foreach(Config::get('status') as $stat){
-            $var = [$stat => $stat];
-            $status = array_merge($status, $var);
+        foreach(Config::get('status') as $id => $stat) {
+            $var = [$id => $stat];
+            $status = $status + $var;
         }
 
         $data = [

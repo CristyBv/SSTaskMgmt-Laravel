@@ -19,7 +19,7 @@ class CreateTasksTable extends Migration
             $table->mediumText('body');
             $table->string('status');
             $table->date('deadline');
-            $table->integer('priority');
+            $table->string('priority');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('project_id');
