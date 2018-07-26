@@ -40,7 +40,7 @@ echo "<thead>";
                                 echo "<td>" . User::find($tsk->user_id)->name . "</td>";
                                 echo "<td>" . Project::find($tsk->project_id)->title . "</td>";
                                 echo "<td>" . $tsk->deadline . "</td>";
-                                echo "<td>" . $tsk->priority . "</td>";                                                                
+                                echo "<td>" . Config::get('priorities')[$tsk->priority] . "</td>";                                                                
                                 echo "<td>" . $tsk->created_at . "</td>";
                                 echo "<td>"
                                 ?>

@@ -13,7 +13,8 @@
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::resource('tasks', 'TasksController');
+Route::resource('/tasks', 'TasksController');
 Route::post('/tasks/filter', 'TasksController@filter')->name('tasks.filter');
+//Route::get('/search/action', 'SearchController@action')->name('search.action');
 
 Auth::routes();

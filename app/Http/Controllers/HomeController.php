@@ -32,6 +32,11 @@ class HomeController extends Controller
             'filtersort' => 'title',
             'taskdesc' => null,
             'searched' => null,
+            'filter_mytask' => 'creator_id',
+            'desc_mytask' => null,
+            'filtersort_mytask' => 'title',
+            'taskdesc_mytask' => null,
+            'searched_mytask' => null,
         ]; 
         return view('home')->with('user', $user)->with('data', $data);
     }

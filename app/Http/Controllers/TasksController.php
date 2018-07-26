@@ -201,15 +201,20 @@ class TasksController extends Controller
 
         $user_id = auth()->user()->id;
         $user = User::find($user_id);
-        $group = $request->group;
         $data = [
-            'filter' => $group,
+            'filter' => $request->group,
             'desc' => $request->groupdesc,
             'filtersort' => $request->sorttask,
             'taskdesc' => $request->taskdesc,
             'searched' => $request->searchtask,
-        ];   
+            'filter_mytask' => $request->group_mytask,
+            'desc_mytask' => $request->groupdesc_mytask,
+            'filtersort_mytask' => $request->sorttask_mytask,
+            'taskdesc_mytask' => $request->taskdesc_mytask,
+            'searched_mytask' => $request->searchtask_mytask,
+        ]; 
         return view('home')->with('user', $user)->with('data', $data);
         
     }
+
 }

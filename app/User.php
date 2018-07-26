@@ -31,6 +31,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Task');
     }
 
+    public function tasksCreatorSort($how){
+        return $this->tasks()->leftJoin('users', 'tasks.creator_id', '=', 'users.id')->orderBy('users.name', $how)->select('tasks.*')->get();
+    }
+
     public function creations(){
         return $this->hasMany('App\Task', 'creator_id');
     }
