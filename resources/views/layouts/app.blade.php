@@ -15,12 +15,6 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script type="text/javascript">
-        function ConfirmDelete() {
-            if (confirm("Are you sure you want to delete?")) return true;
-            else return false;
-        } 
-</script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -38,11 +32,6 @@
         </div>
     </div>
 
-    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace( 'article-ckeditor' );            
-    </script>
-
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
@@ -58,5 +47,19 @@
         });
     </script>
 
+    <script type="text/javascript">
+        function ConfirmDelete() {
+            if (confirm("Are you sure you want to delete?")) return true;
+            else return false;
+        } 
+        function showFilterBody() {
+            if($("#filterbody").length) {
+                if($("#filterbody").css('display') == 'none')
+                    $("#filterbody").css('display', 'block');
+                else $("#filterbody").css('display', 'none');
+            }
+            
+        }  
+    </script>
 </body>
 </html>

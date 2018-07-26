@@ -8,12 +8,12 @@
 @section('content')
 
 <div class="container">
-    <div class="card">
-            <div class="card-header">Filter</div>
-            <div class="card-body">
+    <div class="card dropdown">
+            <div class="card-header dropdown-toggle border border-secondary" onclick="showFilterBody()">Filter</div>
+            <div class="card-body" id="filterbody">
                 <div class="row">
                     <div class="col-sm">
-                        {!! Form::open(['action' => ['TasksController@filter'], 'method' => 'POST']) !!}
+                        {!! Form::open(['action' => ['TasksController@filter'], 'method' => 'GET']) !!}
                         {{ Form::label('group','Grupeaza dupa: ') }}
                         <div class="form-group">
                             {{ Form::radio('group', 'user_id', ($data['filter'] == 'user_id'), ['id' => 'group-0']) }}
@@ -35,6 +35,10 @@
                             {{ Form::label('sorttask-1','deadline') }}
                             {{ Form::radio('sorttask', 'created_at', ($data['filtersort'] == 'created_at'), ['id' => 'sorttask-2']) }}
                             {{ Form::label('sorttask-2','created_date') }}
+                            {{ Form::radio('sorttask', 'status', ($data['filtersort'] == 'status'), ['id' => 'sorttask-3']) }}
+                            {{ Form::label('sorttask-3','status') }}
+                            {{ Form::radio('sorttask', 'priority', ($data['filtersort'] == 'priority'), ['id' => 'sorttask-4']) }}
+                            {{ Form::label('sorttask-4','priority') }}
                             {{ Form::checkbox('taskdesc', 'desc', ($data['taskdesc'] != null), ['class' => 'ml-3', 'id' => 'taskdesc']) }}
                             {{ Form::label('taskdesc','desc') }}
                         </div>
@@ -64,6 +68,10 @@
                             {{ Form::label('sorttask-1_mytask','deadline') }}
                             {{ Form::radio('sorttask_mytask', 'created_at', ($data['filtersort_mytask'] == 'created_at'), ['id' => 'sorttask-2_mytask']) }}
                             {{ Form::label('sorttask-2_mytask','created_date') }}
+                            {{ Form::radio('sorttask_mytask', 'status', ($data['filtersort_mytask'] == 'status'), ['id' => 'sorttask-3_mytask']) }}
+                            {{ Form::label('sorttask-3_mytask','status') }}
+                            {{ Form::radio('sorttask_mytask', 'priority', ($data['filtersort_mytask'] == 'priority'), ['id' => 'sorttask-4_mytask']) }}
+                            {{ Form::label('sorttask-4_mytask','priority') }}
                             {{ Form::checkbox('taskdesc_mytask', 'desc', ($data['taskdesc_mytask'] != null), ['class' => 'ml-3', 'id' => 'taskdesc_mytask']) }}
                             {{ Form::label('taskdesc_mytask','desc') }}
                         </div>
@@ -81,7 +89,7 @@
             <div class="row justify-content-center">
                 <div class="col-sm">
                     <div class="card">
-                        <div class="card-header">Tasks for others</div>
+                        <div class="card-header border border-secondary">Tasks for others</div>
                         <div class="card-body">
                             <a href="/tasks/create" class="btn btn-primary">Create Task</a>
                             <hr>
@@ -90,16 +98,16 @@
                                         @switch($data['filter'])
                                             @case('user_id')
                                                 @include('layouts.home_user')
-                                                @break;
+                                                @break
                                             @case('project_id')
                                                 @include('layouts.home_project')
-                                                @break;
+                                                @break
                                             @case('priority')
                                                 @include('layouts.home_priority')
-                                                @break;
+                                                @break
                                             @case('status')
                                                 @include('layouts.home_status')
-                                                @break;
+                                                @break
                                         @endswitch
                                 </table>
                             @else
@@ -110,24 +118,24 @@
                 </div>
                 <div class="col-sm">
                     <div class="card">
-                        <div class="card-header">My Tasks</div>
+                        <div class="card-header border border-secondary">My Tasks</div>
                         <div class="card-body">
                             <hr>
                             @if(count($user->tasks) > 0)
                                 <table class="table">
                                 @switch($data['filter_mytask'])
                                     @case('creator_id')
-                                        @include('layouts.home_creator')
-                                        @break;
+                                        @include('layouts.home_creator_mytask')
+                                        @break
                                     @case('project_id')
-                                        @include('layouts.home_project')
-                                        @break;
+                                        @include('layouts.home_project_mytask')
+                                        @break
                                     @case('priority')
-                                        @include('layouts.home_priority')
-                                        @break;
+                                        @include('layouts.home_priority_mytask')
+                                        @break
                                     @case('status')
-                                        @include('layouts.home_status')
-                                        @break;
+                                        @include('layouts.home_status_mytask')
+                                        @break
                                 @endswitch
                         </table>
                             @else

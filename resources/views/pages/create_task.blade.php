@@ -36,4 +36,6 @@
         {{ Form::submit('Submit',['class' => 'btn btn-primary']) }}
     {!! Form::close() !!}
     <br>
+    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+    <script> CKEDITOR.replace( 'article-ckeditor' ); </script>
 @endsection
