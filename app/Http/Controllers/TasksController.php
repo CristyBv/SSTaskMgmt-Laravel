@@ -77,6 +77,13 @@ class TasksController extends Controller
         $history->forward_by = $task->creator_id;
         $history->save();
 
+        $user = User::find($request->user);
+        $user->count++;
+        $user->save();
+        $project = Project::find($request->project);
+        $project->count++;
+        $project->save();
+
         return redirect()->route('home')->with('success', 'Post Created');
     }
 
@@ -88,7 +95,9 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        //
+        $task = Task::find($id);
+        $forwards = $task->history_tasks;
+        return view('pages.show')->with('task', $task)->with('history', $forwards);
     }
 
     /**
@@ -101,8 +110,10 @@ class TasksController extends Controller
     {
         $task = Task::find($id);
         $data = $this->create_data();
+        if(auth()->user()->id === $task->user_id) $readonly = true;
+        else $readonly = false;
         if(auth()->user()->id === $task->user_id || auth()->user()->id === $task->creator_id)
-            return view('pages.edit_task')->with('task', $task)->with('data', $data);
+            return view('pages.edit_task')->with('task', $task)->with('data', $data)->with('readonly', $readonly);
         else return redirect()->route('home')->with('error', 'Unauthorized Page');
     }
 
@@ -141,6 +152,10 @@ class TasksController extends Controller
             $history->save();
         }
         
+        $nrstatus = count(Config::get('status'));
+        if($request->status == $nrstatus)
+            $task->delete();   
+
         return redirect()->route('home')->with('success', 'Task Updated');
     }
 
@@ -163,15 +178,18 @@ class TasksController extends Controller
     }
 
     public function create_data(){
+
         $users = array();
-        foreach(User::all() as $user){
+        $users_count = User::all()->sortByDesc('count');
+        foreach($users_count as $user) {
             $var = [$user->id => $user->name];
             $users = $users + $var;
         }
 
         $projects = array();
-        foreach(Project::all() as $proj){
-            $var = [$proj->id => $proj->title . ' --- created by ' . User::where('id', $proj->user_id)->first()->name];
+        $projects_count = Project::all()->sortByDesc('count');
+        foreach($projects_count as $proj) {
+            $var = [$proj->id => $proj->title . ' --- created by ' . $proj->user->name];
             $projects = $projects + $var;
         }
             

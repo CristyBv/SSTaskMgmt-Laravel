@@ -52,14 +52,24 @@
             if (confirm("Are you sure you want to delete?")) return true;
             else return false;
         } 
-        function showFilterBody() {
-            if($("#filterbody").length) {
-                if($("#filterbody").css('display') == 'none')
-                    $("#filterbody").css('display', 'block');
-                else $("#filterbody").css('display', 'none');
+        function show(id) {
+            if($("#"+id).length) {
+                if($("#"+id).css('display') == 'none')
+                    $("#"+id).css('display', 'block');
+                else $("#"+id).css('display', 'none');
             }
-            
-        }  
+        }
+        $(document).ready(function(){
+            $('.taskrow').css('cursor', 'pointer');
+            $(".taskrow").on('click', function(e) {
+                if(!e.target.classList.contains('deleteform')) {
+                    var url = '{{ route("tasks.show", ":id") }}';
+                    url = url.replace(':id', $(this).data('id'));
+                    window.location.replace(url);
+                }
+                
+            });
+        });
     </script>
 </body>
 </html>

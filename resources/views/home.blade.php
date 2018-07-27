@@ -9,7 +9,7 @@
 
 <div class="container">
     <div class="card dropdown">
-            <div class="card-header dropdown-toggle border border-secondary" onclick="showFilterBody()">Filter</div>
+            <div class="card-header dropdown-toggle border border-secondary" onclick="show('filterbody')">Filter</div>
             <div class="card-body" id="filterbody">
                 <div class="row">
                     <div class="col-sm">
@@ -89,57 +89,57 @@
             <div class="row justify-content-center">
                 <div class="col-sm">
                     <div class="card">
-                        <div class="card-header border border-secondary">Tasks for others</div>
-                        <div class="card-body">
+                        <div class="card-header border border-secondary dropdown-toggle" onclick="show('createdtasks')">Tasks for others</div>
+                        <div class="card-body" id="createdtasks">
                             <a href="/tasks/create" class="btn btn-primary">Create Task</a>
                             <hr>
                             @if(count($user->creations) > 0)
-                                <table class="table">
-                                        @switch($data['filter'])
-                                            @case('user_id')
-                                                @include('layouts.home_user')
-                                                @break
-                                            @case('project_id')
-                                                @include('layouts.home_project')
-                                                @break
-                                            @case('priority')
-                                                @include('layouts.home_priority')
-                                                @break
-                                            @case('status')
-                                                @include('layouts.home_status')
-                                                @break
-                                        @endswitch
+                                <table class="table table-responsive">
+                                    @switch($data['filter'])
+                                        @case('user_id')
+                                            @include('includes.home_user')
+                                            @break
+                                        @case('project_id')
+                                            @include('includes.home_project')
+                                            @break
+                                        @case('priority')
+                                            @include('includes.home_priority')
+                                            @break
+                                        @case('status')
+                                            @include('includes.home_status')
+                                            @break
+                                    @endswitch
                                 </table>
                             @else
-                                    <p>You have no tasks!</p>
+                                <p>You have no tasks!</p>
                             @endif
                         </div>        
                     </div>
                 </div>
                 <div class="col-sm">
                     <div class="card">
-                        <div class="card-header border border-secondary">My Tasks</div>
-                        <div class="card-body">
+                        <div class="card-header border border-secondary dropdown-toggle" onclick="show('mytasks')">My Tasks</div>
+                        <div class="card-body" id="mytasks">
                             <hr>
                             @if(count($user->tasks) > 0)
-                                <table class="table">
-                                @switch($data['filter_mytask'])
-                                    @case('creator_id')
-                                        @include('layouts.home_creator_mytask')
-                                        @break
-                                    @case('project_id')
-                                        @include('layouts.home_project_mytask')
-                                        @break
-                                    @case('priority')
-                                        @include('layouts.home_priority_mytask')
-                                        @break
-                                    @case('status')
-                                        @include('layouts.home_status_mytask')
-                                        @break
-                                @endswitch
-                        </table>
+                                <table class="table table-responsive">
+                                    @switch($data['filter_mytask'])
+                                        @case('creator_id')
+                                            @include('includes.home_creator_mytask')
+                                            @break
+                                        @case('project_id')
+                                            @include('includes.home_project_mytask')
+                                            @break
+                                        @case('priority')
+                                            @include('includes.home_priority_mytask')
+                                            @break
+                                        @case('status')
+                                            @include('includes.home_status_mytask')
+                                            @break
+                                    @endswitch
+                                </table>
                             @else
-                                    <p>You have no tasks!</p>
+                                <p>You have no tasks!</p>
                             @endif
                         </div>
                     </div>

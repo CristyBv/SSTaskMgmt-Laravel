@@ -15,6 +15,6 @@ Route::get('/', 'HomeController@index')->name('index');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/tasks', 'TasksController');
 Route::get('/tasks_filter', 'TasksController@filter')->name('tasks.filter');
-//Route::get('/search/action', 'SearchController@action')->name('search.action');
+Route::resource('/projects', 'ProjectsController');
 
 Auth::routes();

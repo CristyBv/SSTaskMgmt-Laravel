@@ -13,10 +13,10 @@
 
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link border border-3 rounded bg-light" href="/">Dashboard <span class="sr-only">(current)</span></a>
+                <a class="nav-link border border-3 rounded bg-light" href="{{ route('home') }}">Dashboard <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link border border-3 rounded bg-light" href="/">Projects <span class="sr-only">(current)</span></a>
+                <a class="nav-link border border-3 rounded bg-light" href="{{ route('projects.index') }}">Projects <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
 

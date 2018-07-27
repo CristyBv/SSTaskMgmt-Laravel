@@ -2,6 +2,8 @@
 
 @section('content')
     <br>
+    <a href=" {{ route('home') }}" class="btn btn-secondary">Go back</a>
+    <br>
     <h1>Create a Task</h1>
     {!! Form::open(['action' => 'TasksController@store', 'method' => 'POST']) !!}
         <div class="form-group">
@@ -37,5 +39,5 @@
     {!! Form::close() !!}
     <br>
     <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
-    <script> CKEDITOR.replace( 'article-ckeditor' ); </script>
+    <script> CKEDITOR.replace( 'article-ckeditor' );</script>
 @endsection

@@ -3,9 +3,9 @@ use \App\User;
 use \App\Task;
 use \App\Project;
 
-if($data['desc_mytask'] != null)
-    $group = $user->tasks->sortByDesc('status')->groupBy($data['filter_mytask']);
-else $group = $user->tasks->sortBy('status')->groupBy($data['filter_mytask']);
+if($data['desc'] != null)
+    $group = $user->creations->sortByDesc('status')->groupBy($data['filter']);
+else $group = $user->creations->sortBy('status')->groupBy($data['filter']);
 
 echo "<thead>";
     echo "<tr><th> Status </th></tr>";
@@ -19,7 +19,7 @@ echo "<thead>";
                 echo "<table class='table table-striped'>";
                     echo "<tr>";
                         echo "<th>". "Title". "</th>";
-                        echo "<th>". "Creator". "</th>";
+                        echo "<th>". "User". "</th>";
                         echo "<th>". "Project". "</th>";                                                                    
                         echo "<th>". "Deadline". "</th>";
                         echo "<th>". "Priority". "</th>";
@@ -28,17 +28,17 @@ echo "<thead>";
                         echo "<th>" . "</th>";
                     echo "</tr>";
 
-                    if($data['taskdesc_mytask'] != null)
-                        $task_sorted = $task->sortByDesc($data['filtersort_mytask']);
-                    else $task_sorted = $task->sortBy($data['filtersort_mytask']);
+                    if($data['taskdesc'] != null)
+                        $task_sorted = $task->sortByDesc($data['filtersort']);
+                    else $task_sorted = $task->sortBy($data['filtersort']);
                     
                     foreach($task_sorted as $tsk) {
-                        if($data['searched_mytask'] == null || $data['searched_mytask'] == "" || strpos($tsk->title, $data['searched_mytask']) !== false)
+                        if($data['searched'] == null || $data['searched'] == "" || strpos($tsk->title, $data['searched']) !== false)
                             {
-                                echo "<tr>";
+                                echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
                                 echo "<td>" . $tsk->title . "</td>";
-                                echo "<td>" . User::find($tsk->creator_id)->name . "</td>";
-                                echo "<td>" . Project::find($tsk->project_id)->title . "</td>";
+                                echo "<td>" . $tsk->user->name . "</td>";
+                                echo "<td>" . $tsk->project->title . "</td>";
                                 echo "<td>" . $tsk->deadline . "</td>";
                                 echo "<td>" . Config::get('priorities')[$tsk->priority] . "</td>";                                                                
                                 echo "<td>" . $tsk->created_at . "</td>";
@@ -51,7 +51,7 @@ echo "<thead>";
                                 ?>
                                 {!! Form::open(['action' => ['TasksController@destroy', $tsk->id], 'method' => 'POST', 'onsubmit' => 'return ConfirmDelete()']) !!}
                                     {{ Form::hidden('_method', 'DELETE') }}
-                                    {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                                    {{ Form::submit('Delete', ['class' => 'btn btn-danger deleteform']) }}
                                 {!! Form::close() !!}
                                 <?php
                                 echo "</td>";                                                                        

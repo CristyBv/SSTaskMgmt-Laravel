@@ -35,9 +35,9 @@ echo "<thead>";
                     foreach($task_sorted as $tsk) {
                         if($data['searched'] == null || $data['searched'] == "" || strpos($tsk->title, $data['searched']) !== false)
                             {
-                                echo "<tr>";
+                                echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
                                 echo "<td>" . $tsk->title . "</td>";
-                                echo "<td>" . Project::find($tsk->project_id)->title . "</td>";
+                                echo "<td>" . $tsk->project->title . "</td>";
                                 echo "<td>" . Config::get('status')[$tsk->status] . "</td>";
                                 echo "<td>" . $tsk->deadline . "</td>";
                                 echo "<td>" . Config::get('priorities')[$tsk->priority] . "</td>";
@@ -51,7 +51,7 @@ echo "<thead>";
                             ?>
                             {!! Form::open(['action' => ['TasksController@destroy', $tsk->id], 'method' => 'POST', 'onsubmit' => 'return ConfirmDelete()']) !!}
                                 {{ Form::hidden('_method', 'DELETE') }}
-                                {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                                {{ Form::submit('Delete', ['class' => 'btn btn-danger deleteform']) }}
                             {!! Form::close() !!}
                             <?php
                             echo "</td>";                                                                        
