@@ -44,7 +44,7 @@ class TasksController extends Controller
     {
         $data = $this->create_data();
 
-        return view('pages.create_task')->with('data',$data);
+        return view('task.create')->with('data',$data);
     }
 
     /**
@@ -97,7 +97,7 @@ class TasksController extends Controller
     {
         $task = Task::find($id);
         $forwards = $task->history_tasks;
-        return view('pages.show')->with('task', $task)->with('history', $forwards);
+        return view('task.show')->with('task', $task)->with('history', $forwards);
     }
 
     /**
@@ -113,7 +113,7 @@ class TasksController extends Controller
         if(auth()->user()->id === $task->user_id) $readonly = true;
         else $readonly = false;
         if(auth()->user()->id === $task->user_id || auth()->user()->id === $task->creator_id)
-            return view('pages.edit_task')->with('task', $task)->with('data', $data)->with('readonly', $readonly);
+            return view('task.edit')->with('task', $task)->with('data', $data)->with('readonly', $readonly);
         else return redirect()->route('home')->with('error', 'Unauthorized Page');
     }
 

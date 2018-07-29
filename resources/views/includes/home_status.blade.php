@@ -33,7 +33,7 @@ echo "<thead>";
                     else $task_sorted = $task->sortBy($data['filtersort']);
                     
                     foreach($task_sorted as $tsk) {
-                        if($data['searched'] == null || $data['searched'] == "" || strpos($tsk->title, $data['searched']) !== false)
+                        if($data['searched'] == null || $data['searched'] == "" || strpos(strtolower($tsk->title), strtolower($data['searched'])) !== false)
                             {
                                 echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
                                 echo "<td>" . $tsk->title . "</td>";

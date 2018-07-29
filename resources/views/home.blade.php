@@ -91,7 +91,7 @@
                     <div class="card">
                         <div class="card-header border border-secondary dropdown-toggle" onclick="show('createdtasks')">Tasks for others</div>
                         <div class="card-body" id="createdtasks">
-                            <a href="/tasks/create" class="btn btn-primary">Create Task</a>
+                            <a href="{{ route('tasks.create') }}" class="btn btn-primary">Create Task</a>
                             <hr>
                             @if(count($user->creations) > 0)
                                 <table class="table table-responsive">
@@ -113,7 +113,7 @@
                             @else
                                 <p>You have no tasks!</p>
                             @endif
-                        </div>        
+                        </div>     
                     </div>
                 </div>
                 <div class="col-sm">

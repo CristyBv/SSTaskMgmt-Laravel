@@ -8,7 +8,7 @@ if($data['desc_mytask'] != null)
 else $group = $user->myTasksSort('asc', 'users')->groupBy($data['filter_mytask']);
 
 echo "<thead>";
-    echo "<tr><th> User </th></tr>";
+    echo "<tr><th> Creator </th></tr>";
     echo "</thead>";
     foreach($group as $id => $task) {
         echo "<tr>";
@@ -33,7 +33,7 @@ echo "<thead>";
                     else $task_sorted = $task->sortBy($data['filtersort_mytask']);
                     
                     foreach($task_sorted as $tsk) {
-                        if($data['searched_mytask'] == null || $data['searched_mytask'] == "" || strpos($tsk->title, $data['searched_mytask']) !== false)
+                        if($data['searched_mytask'] == null || $data['searched_mytask'] == "" || strpos(strtolower($tsk->title), strtolower($data['searched_mytask'])) !== false)
                             {
                                 echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
                                 echo "<td>" . $tsk->title . "</td>";
