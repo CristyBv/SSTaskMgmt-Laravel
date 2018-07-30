@@ -31,32 +31,32 @@ echo "<thead>";
                     if($data['taskdesc_mytask'] != null)
                         $task_sorted = $task->sortByDesc($data['filtersort_mytask']);
                     else $task_sorted = $task->sortBy($data['filtersort_mytask']);
+
+                    $searched = $data['searched_mytask'];
+                    if($searched != null || $searched != '')
+                        $task_sorted = $task_sorted->filter(function ($value, $key) use ($searched) {
+                            return false !== stristr($value->title, $searched);
+                        });
                     
                     foreach($task_sorted as $tsk) {
-                        if($data['searched_mytask'] == null || $data['searched_mytask'] == "" || strpos(strtolower($tsk->title), strtolower($data['searched_mytask'])) !== false)
-                            {
-                                echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
-                                echo "<td>" . $tsk->title . "</td>";
-                                echo "<td>" . $tsk->creator->name . "</td>";
-                                echo "<td>" . Config::get('status')[$tsk->status] . "</td>";
-                                echo "<td>" . $tsk->deadline . "</td>";
-                                echo "<td>" . Config::get('priorities')[$tsk->priority] . "</td>";
-                                echo "<td>" . $tsk->created_at . "</td>";
-                                echo "<td>"
-                                ?>
-                                <a href="{{ route('tasks.edit', ['id'=> $tsk->id]) }}" class='btn btn-secondary'>Edit</a>
-                                <?php
-                                echo "</td>";
-                                echo "<td>"
-                                ?>
-                                {!! Form::open(['action' => ['TasksController@destroy', $tsk->id], 'method' => 'POST', 'onsubmit' => 'return ConfirmDelete()']) !!}
-                                    {{ Form::hidden('_method', 'DELETE') }}
-                                    {{ Form::submit('Delete', ['class' => 'btn btn-danger deleteform']) }}
-                                {!! Form::close() !!}
-                                <?php
-                                echo "</td>";                                                                        
-                                echo "</tr>";
-                            }
+                        echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
+                        echo "<td>" . $tsk->title . "</td>";
+                        echo "<td>" . $tsk->creator->name . "</td>";
+                        echo "<td>" . Config::get('status')[$tsk->status] . "</td>";
+                        echo "<td>" . $tsk->deadline . "</td>";
+                        echo "<td>" . Config::get('priorities')[$tsk->priority] . "</td>";
+                        echo "<td>" . $tsk->created_at . "</td>";
+                        echo "<td>"
+                        ?>
+                        @include('task.edit_button', ['item' => $tsk])
+                        <?php
+                        echo "</td>";
+                        echo "<td>"
+                        ?>
+                        @include('task.delete_button', ['item' => $tsk])
+                        <?php
+                        echo "</td>";                                                                        
+                        echo "</tr>";
                         }
                 echo "</table>";
             echo "</td>";

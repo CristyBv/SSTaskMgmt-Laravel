@@ -60,31 +60,36 @@ class TasksController extends Controller
             'body' => 'required',
         ]);
 
-        $task = new Task;
-        $task->title = $request->title;
-        $task->body = $request->body;
-        $task->creator_id = $request->user()->id;
-        $task->user_id = $request->user;
-        $task->project_id = $request->project;
-        $task->status = $request->status;
-        $task->priority = $request->priority;
-        $task->deadline = $request->date;
-        $task->save();
+        if($request->status != count(Config::get('status'))) {
+            $task = new Task;
+            $task->title = $request->title;
+            $task->body = $request->body;
+            $task->creator_id = $request->user()->id;
+            $task->user_id = $request->user;
+            $task->project_id = $request->project;
+            $task->status = $request->status;
+            $task->priority = $request->priority;
+            $task->deadline = $request->date;
+            $task->save();
 
-        $history = New History_task;
-        $history->task_id = $task->id;
-        $history->user_id = $task->user_id;
-        $history->forward_by = $task->creator_id;
-        $history->save();
+            $history = New History_task;
+            $history->task_id = $task->id;
+            $history->user_id = $task->user_id;
+            $history->forward_by = $task->creator_id;
+            $history->save();
 
-        $user = User::find($request->user);
-        $user->count++;
-        $user->save();
-        $project = Project::find($request->project);
-        $project->count++;
-        $project->save();
+            $user = User::find($request->user);
+            $user->count++;
+            $user->save();
+            $project = Project::find($request->project);
+            $project->count++;
+            $project->save();
 
-        return redirect()->route('home')->with('success', 'Post Created');
+            return redirect()->route('home')->with('success', 'Task Created');
+        } else {
+            return redirect()->route('home')->with('error', 'You can not create a task with an end status');
+        }
+        
     }
 
     /**
@@ -110,7 +115,7 @@ class TasksController extends Controller
     {
         $task = Task::find($id);
         $data = $this->create_data();
-        if(auth()->user()->id === $task->user_id) $readonly = true;
+        if(auth()->user()->id == $task->user_id && auth()->user()->id != $task->creator_id) $readonly = true;
         else $readonly = false;
         if(auth()->user()->id === $task->user_id || auth()->user()->id === $task->creator_id)
             return view('task.edit')->with('task', $task)->with('data', $data)->with('readonly', $readonly);
@@ -133,15 +138,18 @@ class TasksController extends Controller
 
         $ok = 0;
         $task = Task::find($id);
-        if($task->user_id !== $request->user) $ok = 1;
-        $task->title = $request->title;
-        $task->body = $request->body;
-        $task->creator_id = $request->user()->id;
+        if($task->user_id != $request->user) $ok = 1;
         $task->user_id = $request->user;
-        $task->project_id = $request->project;
         $task->status = $request->status;
-        $task->priority = $request->priority;
-        $task->deadline = $request->date;
+        $task->body = $request->body;
+        
+        if($task->creator_id == auth()->user()->id) {
+            $task->title = $request->title;
+            $task->creator_id = $request->user()->id;
+            $task->project_id = $request->project;
+            $task->priority = $request->priority;
+            $task->deadline = $request->date;
+        }
         $task->save();
 
         if($ok == 1) {

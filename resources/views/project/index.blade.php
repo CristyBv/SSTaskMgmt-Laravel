@@ -39,11 +39,8 @@
                             <hr>
                             @if(!Auth::guest())
                                 @if(Auth::user()->id == $project->user_id)
-                                <a href="{{ route('projects.edit', ['id'=> $project->id]) }}" class='btn btn-secondary float-left'>Edit</a>
-                                    {!! Form::open(['action' => ['ProjectsController@destroy', $project->id], 'method' => 'POST', 'onsubmit' => 'return ConfirmDelete()']) !!}
-                                            {{ Form::hidden('_method', 'DELETE') }}
-                                            {{ Form::submit('Delete', ['class' => 'btn btn-danger deleteform float-right']) }}
-                                    {!! Form::close() !!}
+                                @include('project.edit_button', ['item' => $project])
+                                @include('project.delete_button', ['item' => $project])
                                 @endif
                             @endif
                         </div>

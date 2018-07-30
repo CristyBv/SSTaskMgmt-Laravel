@@ -62,12 +62,11 @@
         $(document).ready(function(){
             $('.taskrow').css('cursor', 'pointer');
             $(".taskrow").on('click', function(e) {
-                if(!e.target.classList.contains('deleteform')) {
+                if(!e.target.classList.contains('deleteform') && !e.target.classList.contains('editform')) {
                     var url = '{{ route("tasks.show", ":id") }}';
                     url = url.replace(':id', $(this).data('id'));
-                    window.location.replace(url);
-                }
-                
+                    window.open(url);
+                }                
             });
         });
     </script>

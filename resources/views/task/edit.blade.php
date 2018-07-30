@@ -30,7 +30,7 @@
         </div>
         <div class="form-group">
             {{ Form::label('body','Description') }}
-            {{ Form::textarea('body', $task->body, ['id' => 'article-ckeditor', 'class' => 'form-control', 'placeholder' => 'Body Text', 'readonly' => $readonly]) }}
+            {{ Form::textarea('body', $task->body, ['id' => 'article-ckeditor', 'class' => 'form-control', 'placeholder' => 'Body Text']) }}
         </div>
         {{ Form::hidden('_method','PUT') }}
         {{ Form::submit('Submit',['class' => 'btn btn-primary']) }}
