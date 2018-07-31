@@ -17,7 +17,7 @@
                     {{ Form::label('projectdesc','desc') }}
                 </div>
                 <div class="form-group">
-                    {{ Form::text('searchproject', $data['searched'], ['id' => 'searchproject', 'placeholder' => 'Search Projects']) }}
+                    {{ Form::text('searchproject', $data['searched'], ['id' => 'searchproject', 'placeholder' => 'Search Projects', 'class' => 'searchinput']) }}
                 </div>
                 {{ Form::submit('Filter', ['class' => 'btn btn-secondary']) }}                                             
             {!! Form::close() !!}

@@ -34,6 +34,8 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">  
 
     <script type="text/javascript">
         $("#project").select2({
@@ -45,6 +47,15 @@
             placeholder: "Select a Name",
             allowClear: true
         });
+
+        $( "#datepicker" ).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+            orientation: 'bottom auto',
+        });
+
     </script>
 
     <script type="text/javascript">
@@ -59,16 +70,18 @@
                 else $("#"+id).css('display', 'none');
             }
         }
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('.taskrow').css('cursor', 'pointer');
             $(".taskrow").on('click', function(e) {
                 if(!e.target.classList.contains('deleteform') && !e.target.classList.contains('editform')) {
                     var url = '{{ route("tasks.show", ":id") }}';
                     url = url.replace(':id', $(this).data('id'));
-                    window.open(url);
-                }                
+                    window.location.replace(url);
+                }
             });
+            $('#datepicker').datepicker("show"); 
         });
+        
     </script>
 </body>
 </html>

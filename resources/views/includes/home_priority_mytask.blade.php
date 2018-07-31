@@ -39,24 +39,26 @@ echo "<thead>";
                         });
                     
                     foreach($task_sorted as $tsk) {
-                        echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
-                        echo "<td>" . $tsk->title . "</td>";
-                        echo "<td>" . $tsk->creator->name . "</td>";
-                        echo "<td>" . $tsk->project->title . "</td>";
-                        echo "<td>" . Config::get('status')[$tsk->status] . "</td>";
-                        echo "<td>" . $tsk->deadline . "</td>";                                                                        
-                        echo "<td>" . $tsk->created_at . "</td>";
-                        echo "<td>"
-                        ?>
-                        @include('task.edit_button', ['item' => $tsk])
-                        <?php
-                        echo "</td>";
-                        echo "<td>"
-                        ?>
-                        @include('task.delete_button', ['item' => $tsk])
-                        <?php
-                        echo "</td>";                                                                        
-                        echo "</tr>";
+                        if($tsk->status != count(Config::get('status'))) {
+                            echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
+                            echo "<td>" . $tsk->title . "</td>";
+                            echo "<td>" . $tsk->creator->name . "</td>";
+                            echo "<td>" . $tsk->project->title . "</td>";
+                            echo "<td>" . Config::get('status')[$tsk->status] . "</td>";
+                            echo "<td>" . $tsk->deadline . "</td>";                                                                        
+                            echo "<td>" . $tsk->created_at . "</td>";
+                            echo "<td>"
+                            ?>
+                            @include('task.edit_button', ['item' => $tsk])
+                            <?php
+                            echo "</td>";
+                            echo "<td>"
+                            ?>
+                            @include('task.delete_button', ['item' => $tsk])
+                            <?php
+                            echo "</td>";                                                                        
+                            echo "</tr>";
+                        }
                     }
                 echo "</table>";
             echo "</td>";

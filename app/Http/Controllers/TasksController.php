@@ -85,9 +85,9 @@ class TasksController extends Controller
             $project->count++;
             $project->save();
 
-            return redirect()->route('home')->with('success', 'Task Created');
+            return redirect()->route('tasks.create')->with('success', 'Task Created');
         } else {
-            return redirect()->route('home')->with('error', 'You can not create a task with an end status');
+            return redirect()->route('tasks.create')->with('error', 'You can not create a task with an end status');
         }
         
     }
@@ -160,9 +160,9 @@ class TasksController extends Controller
             $history->save();
         }
         
-        $nrstatus = count(Config::get('status'));
-        if($request->status == $nrstatus)
-            $task->delete();   
+        // $nrstatus = count(Config::get('status'));
+        // if($request->status == $nrstatus)
+        //     $task->delete();   
 
         return redirect()->route('home')->with('success', 'Task Updated');
     }

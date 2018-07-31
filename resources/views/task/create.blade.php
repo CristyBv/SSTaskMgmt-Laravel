@@ -29,7 +29,7 @@
         </div>
         <div class="form-group">
                 {{ Form::label('choosedeadline','Choose Deadline') }}
-                {{ Form::date('date', \Carbon\Carbon::now(), ['class' => 'form-control']) }}
+                {{ Form::text('date', \Carbon\Carbon::now()->toDateString(), ['class' => 'form-control', 'id' => 'datepicker']) }}
         </div>
         <div class="form-group">
                 {{ Form::label('body','Description') }}
