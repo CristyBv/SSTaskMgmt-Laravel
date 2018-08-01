@@ -51,6 +51,8 @@
             }
         }
         $(document).ready(function() {
+
+
             $('.taskrow').css('cursor', 'pointer');
             // $(".taskrow").on('click', function(e) {
             //     if(!e.target.classList.contains('deleteform') && !e.target.classList.contains('editform')) {
@@ -63,20 +65,36 @@
             $('[data-toggle="popover"]').popover({
                 html: true,
                 container: 'body',
-                placement: 'right',
-                content: function() {
-                    
+                placement: 'bottom',
+                trigger: 'manual',
+                content: function() {   
                     return $('.popover_content').html();
                 }
             });
 
             $(document).on('click', ".popoverbutton", function () {
-                $(".js-data-example-ajax").select2({
+                if($('.formforward').children().length != 0) {
+                    $('.formforward').empty();
+                    $(this).popover('hide');
+                } else {
+                    $(this).popover('show');
+                    var select = $('<select class=\"usersselect\"></select>');
+                    $('.formforward').append(select);
+                    $(".usersselect").select2({
                     width: '100%',
                     placeholder: "Select a Name",
                     allowClear: true
-                });
+                    });
+                }               
+
             });
+
+            // $(document).on('click', 'body', function(event) {
+            //     if(!event.target.classList.contains('popoverbutton')) {
+            //         $(".usersselecr").select2('data', null);
+            //         $('.popoverbutton').popover('hide');
+            //     }                    
+            // });
 
         });
 
@@ -90,7 +108,6 @@
             placeholder: "Select a Name",
             allowClear: true
         });
-
         
 
         // $('.js-data-example-ajax').select2({

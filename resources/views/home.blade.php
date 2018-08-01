@@ -86,7 +86,7 @@
     <div class="row justify-content-center">
         <div class="col-sm">            
             <div class="row justify-content-center">
-                <div class="col-sm">
+                <div class="col-sm-6">
                     <div class="card">
                         <div class="card-header border border-secondary dropdown-toggle" onclick="show('createdtasks')">Tasks for others</div>
                         <div class="card-body" id="createdtasks">
@@ -115,7 +115,7 @@
                         </div>     
                     </div>
                 </div>
-                <div class="col-sm">
+                <div class="col-sm-6">
                     <div class="card">
                         <div class="card-header border border-secondary dropdown-toggle" onclick="show('mytasks')">My Tasks</div>
                         <div class="card-body" id="mytasks">

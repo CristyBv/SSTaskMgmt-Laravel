@@ -55,8 +55,7 @@ echo "<thead>";
                             ?>
                             <div class="popover_content" style="display:none">
                                 {!! Form::open(['action' => ['TasksController@forward', $tsk->id], 'method' => 'GET']) !!}
-                                    <div class="form-group">
-                                        <select class="js-data-example-ajax"></select>
+                                    <div class="form-group formforward">
                                     </div>
                                 {!! Form::close() !!}
                             </div>
