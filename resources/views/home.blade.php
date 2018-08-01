@@ -6,7 +6,6 @@
 @extends('layouts.app')
 
 @section('content')
-<script src="{{ asset('js/keyboard_binds.js') }}"></script>
 <div class="container">
     <div class="card dropdown">
             <div class="card-header dropdown-toggle border border-secondary" onclick="show('filterbody')">Filter</div>
@@ -149,22 +148,26 @@
     </div>
 </div>
 
-{{-- <script>
-   $(document).ready(function() {
-       fetch_task();
+<script>
+//    $(document).ready(function() {
+//         $(document).on('keyup','.test',function(){
+//             var txt = $(this).val();
+//                if(txt != '') {
+//                 $.ajax({
+//                     url:"{{ route('users.search') }}",
+//                     method:'GET',
+//                     data:{search:txt},
+//                     dataType:'json',                    
+//                     }).done(function(data) {
+//                         alert(data.result);
+//                         $('.forward1').html(data.result);                        
+//                     }).fail(function() {
+//                         alert('error');
+//                     }); 
+//                 }                                    
+//         });
 
-       function fetch_task(query = '') {
-           $.ajax({
-               url:"{{ route('tasks.search') }}",
-               method:'GET',
-               data:{query:query},
-               dataType:'json',
-               succes:function(data) {
-                   $('#test').html(data.tasks);
-               }
+//    });
 
-           })
-       }
-   }); 
-</script> --}}
+</script>
 @endsection

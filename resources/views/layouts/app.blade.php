@@ -13,8 +13,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -22,6 +26,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet"> 
+
 </head>
 <body>
     <div id="app">
@@ -31,32 +37,6 @@
             @yield('content')
         </div>
     </div>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">  
-
-    <script type="text/javascript">
-        $("#project").select2({
-            placeholder: "Select a Name",
-            allowClear: true
-        });
-
-        $("#user").select2({
-            placeholder: "Select a Name",
-            allowClear: true
-        });
-
-        $( "#datepicker" ).datepicker({
-            changeMonth: true,
-            changeYear: true,
-            autoclose: true,
-            format: 'yyyy-mm-dd',
-            orientation: 'bottom auto',
-        });
-
-    </script>
 
     <script type="text/javascript">
         function ConfirmDelete() {
@@ -72,16 +52,71 @@
         }
         $(document).ready(function() {
             $('.taskrow').css('cursor', 'pointer');
-            $(".taskrow").on('click', function(e) {
-                if(!e.target.classList.contains('deleteform') && !e.target.classList.contains('editform')) {
-                    var url = '{{ route("tasks.show", ":id") }}';
-                    url = url.replace(':id', $(this).data('id'));
-                    window.location.replace(url);
+            // $(".taskrow").on('click', function(e) {
+            //     if(!e.target.classList.contains('deleteform') && !e.target.classList.contains('editform')) {
+            //         var url = '{{ route("tasks.show", ":id") }}';
+            //         url = url.replace(':id', $(this).data('id'));
+            //         window.location.replace(url);
+            //     }
+            // });
+            $('#datepicker').datepicker("show"); 
+            $('[data-toggle="popover"]').popover({
+                html: true,
+                container: 'body',
+                placement: 'right',
+                content: function() {
+                    
+                    return $('.popover_content').html();
                 }
             });
-            $('#datepicker').datepicker("show"); 
+
+            $(document).on('click', ".popoverbutton", function () {
+                $(".js-data-example-ajax").select2({
+                    width: '100%',
+                    placeholder: "Select a Name",
+                    allowClear: true
+                });
+            });
+
         });
+
+
+        $("#project").select2({
+            placeholder: "Select a Name",
+            allowClear: true
+        });
+
+        $("#user").select2({
+            placeholder: "Select a Name",
+            allowClear: true
+        });
+
         
-    </script>
+
+        // $('.js-data-example-ajax').select2({
+        //     dropdownParent: $('#popover_content'),
+        //     placeholder: 'Select an option',
+        //     ajax: {
+        //         url: "{{ route('users.search') }}",
+        //         dataType: 'json',
+        //         data: function (params) {
+        //         var query = {
+        //             search: params.term,
+        //             type: 'public'
+        //         }
+        //         return query;
+        //         }
+        //     }
+        // });
+
+        $( "#datepicker" ).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+            orientation: 'bottom auto',
+        });
+</script>
+
 </body>
 </html>
