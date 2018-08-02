@@ -156,7 +156,7 @@
             changeMonth: true,
             changeYear: true,
             autoclose: true,
-            format: 'yyyy-mm-dd',
+            dateFormat: 'yy-mm-dd',
             orientation: 'bottom auto',
         });
 </script>
