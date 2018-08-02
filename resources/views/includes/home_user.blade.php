@@ -53,7 +53,11 @@ echo "<thead>";
                             echo "<td>"
                             ?>
                             <div class="popover_content" style="display:none">
+<<<<<<< HEAD
                                 {!! Form::open(['action' => ['TasksController@forward'], 'method' => 'GET']) !!}
+=======
+                                {!! Form::open(['action' => ['TasksController@forward', $tsk->id], 'method' => 'GET']) !!}
+>>>>>>> d1bf14b65dd5edbd280c53c5e2c8b5af19ac1f3d
                                     <div class="form-group formforward">
                                     </div>
                                 {!! Form::close() !!}

@@ -54,7 +54,10 @@
         }
         $(document).ready(function() {
 
+<<<<<<< HEAD
             $('.mytask-table').not(':has(.taskrow)').parent().parent().css('display', 'none');
+=======
+>>>>>>> d1bf14b65dd5edbd280c53c5e2c8b5af19ac1f3d
 
             $('.taskrow').css('cursor', 'pointer');
             $(".taskrow").on('click', function(e) {
@@ -70,11 +73,16 @@
                 container: 'body',
                 placement: 'bottom',
                 trigger: 'manual',
+<<<<<<< HEAD
                 content: function() {
+=======
+                content: function() {   
+>>>>>>> d1bf14b65dd5edbd280c53c5e2c8b5af19ac1f3d
                     return $('.popover_content').html();
                 }
             });
 
+<<<<<<< HEAD
             $(document).on('click', ".popoverbutton", function() {
                 if ($('.formforward').children().length != 0) {
                     $('.formforward').empty();
@@ -118,6 +126,32 @@
                     });
                 }
             });
+=======
+            $(document).on('click', ".popoverbutton", function () {
+                if($('.formforward').children().length != 0) {
+                    $('.formforward').empty();
+                    $(this).popover('hide');
+                } else {
+                    $(this).popover('show');
+                    var select = $('<select class=\"usersselect\"></select>');
+                    $('.formforward').append(select);
+                    $(".usersselect").select2({
+                    width: '100%',
+                    placeholder: "Select a Name",
+                    allowClear: true
+                    });
+                }               
+
+            });
+
+            // $(document).on('click', 'body', function(event) {
+            //     if(!event.target.classList.contains('popoverbutton')) {
+            //         $(".usersselecr").select2('data', null);
+            //         $('.popoverbutton').popover('hide');
+            //     }                    
+            // });
+
+>>>>>>> d1bf14b65dd5edbd280c53c5e2c8b5af19ac1f3d
         });
 
 
@@ -130,10 +164,18 @@
             placeholder: "Select a Name",
             allowClear: true,
         });
+<<<<<<< HEAD
 
         // $("#user").select2({
         //     placeholder: "Select a Name",
         //     allowClear: true,
+=======
+        
+
+        // $('.js-data-example-ajax').select2({
+        //     dropdownParent: $('#popover_content'),
+        //     placeholder: 'Select an option',
+>>>>>>> d1bf14b65dd5edbd280c53c5e2c8b5af19ac1f3d
         //     ajax: {
         //         url: "{{ route('users.search') }}",
         //         dataType: 'json',
