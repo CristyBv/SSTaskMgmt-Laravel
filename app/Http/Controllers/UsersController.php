@@ -9,13 +9,17 @@ class UsersController extends Controller
 {
     public function search(Request $request) {
 
-        $what = $request->search;
-        $users = DB::table('users')->where('name', 'like', '%'.$what.'%')->get();
-        $output = "";
-        foreach($users as $user) {
-            $output = $output . "<option value=\"" . $user->id . "\">" . $user->name . "</option>";
-        }
-        echo json_encode(['result' => $output, 'test' => $users]);
-
+        $what = $request->get('search');
+        if($what != '') {
+            $users = DB::table('users')->where('name', 'like', '%'.$what.'%')->get();
+            $data = [];
+            foreach($users as $user) {
+                array_push($data, [
+                    'id' => $user->id,
+                    'text' => $user->name,
+                ]);
+            }
+            echo json_encode($data);
+        }      
     }
 }

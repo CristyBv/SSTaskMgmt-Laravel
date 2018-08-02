@@ -243,4 +243,18 @@ class TasksController extends Controller
         
     }
 
+    public function forward(Request $request) {
+        $task = Task::find($request->id);
+        if($task->user_id != $request->forwarduser) {    
+            $task->user_id = $request->forwarduser;
+            $task->save();
+            $history = New History_task;
+            $history->task_id = $task->id;
+            $history->user_id = $task->user_id;
+            $history->forward_by = $request->user()->id;
+            $history->save();
+        }
+        return redirect()->route('home')->with('success', "Task Forwarded");
+    }
+
 }

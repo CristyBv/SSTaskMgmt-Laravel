@@ -53,7 +53,13 @@ echo "<thead>";
                         echo "</td>";
                         echo "<td>"
                         ?>
-                        @include('task.delete_button', ['item' => $tsk])
+                        <div class="popover_content" style="display:none">
+                            {!! Form::open(['action' => ['TasksController@forward', $tsk->id], 'method' => 'GET']) !!}
+                                <div class="form-group formforward">
+                                </div>
+                            {!! Form::close() !!}
+                        </div>
+                        <button type="button" class="btn btn-info popoverbutton" data-toggle="popover" title="Forward To" data-id="{{ $tsk->id }}">Forward</button>
                         <?php
                         echo "</td>";                                                                        
                         echo "</tr>";

@@ -86,7 +86,7 @@
     <div class="row justify-content-center">
         <div class="col-sm">            
             <div class="row justify-content-center">
-                <div class="col-sm">
+                <div class="col-sm-6">
                     <div class="card">
                         <div class="card-header border border-secondary dropdown-toggle" onclick="show('createdtasks')">Tasks for others</div>
                         <div class="card-body" id="createdtasks">
@@ -115,7 +115,7 @@
                         </div>     
                     </div>
                 </div>
-                <div class="col-sm">
+                <div class="col-sm-6">
                     <div class="card">
                         <div class="card-header border border-secondary dropdown-toggle" onclick="show('mytasks')">My Tasks</div>
                         <div class="card-body" id="mytasks">
@@ -147,27 +147,4 @@
         </div>
     </div>
 </div>
-
-<script>
-//    $(document).ready(function() {
-//         $(document).on('keyup','.test',function(){
-//             var txt = $(this).val();
-//                if(txt != '') {
-//                 $.ajax({
-//                     url:"{{ route('users.search') }}",
-//                     method:'GET',
-//                     data:{search:txt},
-//                     dataType:'json',                    
-//                     }).done(function(data) {
-//                         alert(data.result);
-//                         $('.forward1').html(data.result);                        
-//                     }).fail(function() {
-//                         alert('error');
-//                     }); 
-//                 }                                    
-//         });
-
-//    });
-
-</script>
 @endsection

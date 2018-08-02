@@ -17,7 +17,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 
     <!-- Fonts -->
@@ -42,74 +43,116 @@
         function ConfirmDelete() {
             if (confirm("Are you sure you want to delete?")) return true;
             else return false;
-        } 
+        }
+
         function show(id) {
-            if($("#"+id).length) {
-                if($("#"+id).css('display') == 'none')
-                    $("#"+id).css('display', 'block');
-                else $("#"+id).css('display', 'none');
+            if ($("#" + id).length) {
+                if ($("#" + id).css('display') == 'none')
+                    $("#" + id).css('display', 'block');
+                else $("#" + id).css('display', 'none');
             }
         }
         $(document).ready(function() {
+
+            $('.mytask-table').not(':has(.taskrow)').parent().parent().css('display', 'none');
+
             $('.taskrow').css('cursor', 'pointer');
-            // $(".taskrow").on('click', function(e) {
-            //     if(!e.target.classList.contains('deleteform') && !e.target.classList.contains('editform')) {
-            //         var url = '{{ route("tasks.show", ":id") }}';
-            //         url = url.replace(':id', $(this).data('id'));
-            //         window.location.replace(url);
-            //     }
-            // });
-            $('#datepicker').datepicker("show"); 
+            $(".taskrow").on('click', function(e) {
+                if (!e.target.classList.contains('popoverbutton') && !e.target.classList.contains('editform')) {
+                    var url = '{{ route("tasks.show", ":id") }}';
+                    url = url.replace(':id', $(this).data('id'));
+                    window.location.replace(url);
+                }
+            });
+            $('#datepicker').datepicker("show");
             $('[data-toggle="popover"]').popover({
                 html: true,
                 container: 'body',
-                placement: 'right',
+                placement: 'bottom',
+                trigger: 'manual',
                 content: function() {
-                    
                     return $('.popover_content').html();
                 }
             });
 
-            $(document).on('click', ".popoverbutton", function () {
-                $(".js-data-example-ajax").select2({
-                    width: '100%',
-                    placeholder: "Select a Name",
-                    allowClear: true
-                });
+            $(document).on('click', ".popoverbutton", function() {
+                if ($('.formforward').children().length != 0) {
+                    $('.formforward').empty();
+                    $('.popoverbutton').popover('hide');
+                } else {
+                    $(this).popover('show');
+                    var select = $('<select class=\"usersselect\" name=\"forwarduser\"></select>');
+                    var id = $(this).data('id');
+                    select.on('change', function() {
+                        if($(this).val() != null) {
+                            var submit = $('<input type=\"submit\" class=\"btn btn-success\" value=\"Forward\">');
+                            var idfield = $('<input>', {'type': 'hidden', 'name': 'id', 'value': id});
+                            $('.formforward input').remove();
+                            $('.formforward').append(idfield);
+                            $('.formforward').append(submit);
+                        } else {
+                            $('.formforward input').remove();
+                        }
+                    });
+                    $('.formforward').append(select);
+                    $(".usersselect").select2({
+                        width: '100%',
+                        placeholder: "Select a Name",
+                        allowClear: true,
+                        ajax: {
+                            url: "{{ route('users.search') }}",
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public'
+                                }
+                                return query;
+                            },
+                            processResults: function(data) {
+                                return {
+                                    results: data
+                                };
+                            }
+                        }
+                    });
+                }
             });
-
         });
 
 
         $("#project").select2({
             placeholder: "Select a Name",
-            allowClear: true
+            allowClear: true,
         });
 
         $("#user").select2({
             placeholder: "Select a Name",
-            allowClear: true
+            allowClear: true,
         });
 
-        
-
-        // $('.js-data-example-ajax').select2({
-        //     dropdownParent: $('#popover_content'),
-        //     placeholder: 'Select an option',
+        // $("#user").select2({
+        //     placeholder: "Select a Name",
+        //     allowClear: true,
         //     ajax: {
         //         url: "{{ route('users.search') }}",
         //         dataType: 'json',
-        //         data: function (params) {
-        //         var query = {
-        //             search: params.term,
-        //             type: 'public'
-        //         }
-        //         return query;
+        //         data: function(params) {
+        //             var query = {
+        //                 search: params.term,
+        //                 type: 'public'
+        //             }
+        //             return query;
+        //         },
+        //         processResults: function(data) {
+        //             return {
+        //                 results: data
+        //             };
         //         }
         //     }
         // });
 
-        $( "#datepicker" ).datepicker({
+        $("#datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
             autoclose: true,

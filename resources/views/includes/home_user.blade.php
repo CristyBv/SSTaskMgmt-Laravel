@@ -36,8 +36,7 @@ echo "<thead>";
                     if($searched != null || $searched != '')
                         $task_sorted = $task_sorted->filter(function ($value, $key) use ($searched) {
                             return false !== stristr($value->title, $searched);
-                        });
-                                       
+                        });         
                     foreach($task_sorted as $tsk) {
                             echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
                             echo "<td>" . $tsk->title . "</td>";
@@ -54,13 +53,12 @@ echo "<thead>";
                             echo "<td>"
                             ?>
                             <div class="popover_content" style="display:none">
-                                {!! Form::open(['action' => ['TasksController@forward', $tsk->id], 'method' => 'GET']) !!}
-                                    <div class="form-group">
-                                        <select class="js-data-example-ajax"></select>
+                                {!! Form::open(['action' => ['TasksController@forward'], 'method' => 'GET']) !!}
+                                    <div class="form-group formforward">
                                     </div>
                                 {!! Form::close() !!}
                             </div>
-                            <button type="button" class="btn btn-info popoverbutton" data-toggle="popover" title="Forward To">Forward</button>
+                            <button type="button" class="btn btn-info popoverbutton" data-toggle="popover" title="Forward To" data-id="{{ $tsk->id }}">Forward</button>
                             <?php
                             echo "</td>";                                                                        
                         echo "</tr>";                                                   

@@ -2,6 +2,8 @@
 
 @section('content')
     <br>
+    <a href=" {{ route('home') }}" class="btn btn-secondary">Go back</a>
+    <br>
     <h1>Edit a Task</h1>
     {!! Form::open(['action' => ['TasksController@update', $task->id], 'method' => 'POST']) !!}
         <div class="form-group">
