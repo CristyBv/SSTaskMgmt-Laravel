@@ -70,7 +70,7 @@
                 container: 'body',
                 placement: 'bottom',
                 trigger: 'manual',
-                content: function() {   
+                content: function() {
                     return $('.popover_content').html();
                 }
             });
