@@ -26,18 +26,21 @@ class HomeController extends Controller
     {
         $user_id = auth()->user()->id;
         $user = User::find($user_id);
-        $data = [
-            'filter' => 'user_id',
-            'desc' => null,
-            'filtersort' => 'title',
-            'taskdesc' => null,
-            'searched' => null,
-            'filter_mytask' => 'creator_id',
-            'desc_mytask' => null,
-            'filtersort_mytask' => 'title',
-            'taskdesc_mytask' => null,
-            'searched_mytask' => null,
-        ]; 
-        return view('home')->with('user', $user)->with('data', $data);
+        if(!session()->has('filtred')) {
+            session([
+                'filtred' => 'default',
+                'groupby' => 'user_id',
+                'groupdesc' => null,
+                'tasksort' => 'title',
+                'taskdesc' => null,
+                'searched' => null,
+                'groupby_mytask' => 'creator_id',
+                'groupdesc_mytask' => null,
+                'tasksort_mytask' => 'title',
+                'taskdesc_mytask' => null,
+                'searched_mytask' => null,
+            ]);
+        }        
+        return view('home')->with('user', $user);
     }
 }

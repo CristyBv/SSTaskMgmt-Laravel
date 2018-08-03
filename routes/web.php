@@ -19,5 +19,6 @@ Route::resource('/projects', 'ProjectsController');
 Route::get('/project_filter', 'ProjectsController@filter')->name('projects.filter');
 Route::get('/tasks_forward', 'TasksController@forward')->name('tasks.forward');
 Route::get('/users_search', 'UsersController@search')->name('users.search');
+Route::get('/projects_search', 'ProjectsController@search')->name('projects.search');
 
 Auth::routes();

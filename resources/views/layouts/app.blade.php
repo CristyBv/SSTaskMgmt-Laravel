@@ -54,7 +54,7 @@
         }
         $(document).ready(function() {
 
-            $('.mytask-table').not(':has(.taskrow)').parent().parent().css('display', 'none');
+            $('.task-table').not(':has(.taskrow)').parent().parent().css('display', 'none');
 
             $('.taskrow').css('cursor', 'pointer');
             $(".taskrow").on('click', function(e) {
@@ -64,7 +64,7 @@
                     window.location.replace(url);
                 }
             });
-            $('#datepicker').datepicker("show");
+            //$('#datepicker').datepicker("show");
             $('[data-toggle="popover"]').popover({
                 html: true,
                 container: 'body',
@@ -120,37 +120,47 @@
             });
         });
 
-
-        $("#project").select2({
-            placeholder: "Select a Name",
-            allowClear: true,
-        });
-
         $("#user").select2({
             placeholder: "Select a Name",
             allowClear: true,
+            ajax: {
+                url: "{{ route('users.search') }}",
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function(data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
         });
 
-        // $("#user").select2({
-        //     placeholder: "Select a Name",
-        //     allowClear: true,
-        //     ajax: {
-        //         url: "{{ route('users.search') }}",
-        //         dataType: 'json',
-        //         data: function(params) {
-        //             var query = {
-        //                 search: params.term,
-        //                 type: 'public'
-        //             }
-        //             return query;
-        //         },
-        //         processResults: function(data) {
-        //             return {
-        //                 results: data
-        //             };
-        //         }
-        //     }
-        // });
+        $("#project").select2({
+            placeholder: "Select a Title",
+            allowClear: true,
+            ajax: {
+                url: "{{ route('projects.search') }}",
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function(data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
 
         $("#datepicker").datepicker({
             changeMonth: true,
@@ -158,7 +168,24 @@
             autoclose: true,
             dateFormat: 'yy-mm-dd',
             orientation: 'bottom auto',
+            onSelect: function(dateText, inst) {
+                $("input[name='date']").val(dateText);
+            }
         });
+
+        function radiochange(name, id) {
+            var radio = $('input[type=radio][name=\"'+name+'\"]:checked');      
+            var data = {
+            id: radio.val(),
+            text: radio.attr('id').substr(radio.val().length)
+            };
+
+            var newOption = new Option(data.text, data.id, true, true);
+            $('#'+id).empty();
+            $('#'+id).append(newOption).trigger('change');
+        }
+
+        
 </script>
 
 </body>

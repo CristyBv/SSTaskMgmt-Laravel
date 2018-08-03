@@ -188,16 +188,16 @@ class TasksController extends Controller
     public function create_data(){
 
         $users = array();
-        $users_count = User::all()->sortByDesc('count');
+        $users_count = User::orderByDesc('count')->take(5)->get();
         foreach($users_count as $user) {
             $var = [$user->id => $user->name];
             $users = $users + $var;
         }
 
         $projects = array();
-        $projects_count = Project::all()->sortByDesc('count');
+        $projects_count = Project::orderByDesc('count')->take(5)->get();
         foreach($projects_count as $proj) {
-            $var = [$proj->id => $proj->title . ' --- created by ' . $proj->user->name];
+            $var = [$proj->id => $proj->title];
             $projects = $projects + $var;
         }
             
@@ -227,19 +227,20 @@ class TasksController extends Controller
 
         $user_id = auth()->user()->id;
         $user = User::find($user_id);
-        $data = [
-            'filter' => $request->group,
-            'desc' => $request->groupdesc,
-            'filtersort' => $request->sorttask,
+        session([
+            'filtred' => 'used',
+            'groupby' => $request->group,
+            'groupdesc' => $request->groupdesc,
+            'tasksort' => $request->sorttask,
             'taskdesc' => $request->taskdesc,
             'searched' => $request->searchtask,
-            'filter_mytask' => $request->group_mytask,
-            'desc_mytask' => $request->groupdesc_mytask,
-            'filtersort_mytask' => $request->sorttask_mytask,
+            'groupby_mytask' => $request->group_mytask,
+            'groupdesc_mytask' => $request->groupdesc_mytask,
+            'tasksort_mytask' => $request->sorttask_mytask,
             'taskdesc_mytask' => $request->taskdesc_mytask,
             'searched_mytask' => $request->searchtask_mytask,
-        ]; 
-        return view('home')->with('user', $user)->with('data', $data);
+        ]);
+        return view('home')->with('user', $user);
         
     }
 

@@ -3,9 +3,9 @@ use \App\User;
 use \App\Task;
 use \App\Project;
 
-if($data['desc_mytask'] != null)
-    $group = $user->tasks->sortByDesc('priority')->groupBy($data['filter_mytask']);
-else $group = $user->tasks->sortBy('priority')->groupBy($data['filter_mytask']);
+if(session('groupdesc_mytask') != null)
+    $group = $user->tasks->sortByDesc('priority')->groupBy(session('groupby_mytask'));
+else $group = $user->tasks->sortBy('priority')->groupBy(session('groupby_mytask'));
 
 echo "<thead>";
     echo "<tr><th> Priority </th></tr>";
@@ -16,7 +16,7 @@ echo "<thead>";
                 echo Config::get('priorities')[$id];
             echo "</td>";
             echo "<td>";
-                echo "<table class='table table-striped'>";
+                echo "<table class='table table-striped task-table'>";
                     echo "<tr>";
                         echo "<th>". "Title". "</th>";
                         echo "<th>". "Creator". "</th>";
@@ -28,11 +28,11 @@ echo "<thead>";
                         echo "<th>" . "</th>";
                     echo "</tr>";
 
-                    if($data['taskdesc_mytask'] != null)
-                        $task_sorted = $task->sortByDesc($data['filtersort_mytask']);
-                    else $task_sorted = $task->sortBy($data['filtersort_mytask']);
+                    if(session('taskdesc_mytask') != null)
+                        $task_sorted = $task->sortByDesc(session('tasksort_mytask'));
+                    else $task_sorted = $task->sortBy(session('tasksort_mytask'));
 
-                    $searched = $data['searched_mytask'];
+                    $searched = session('searched_mytask');
                     if($searched != null || $searched != '')
                         $task_sorted = $task_sorted->filter(function ($value, $key) use ($searched) {
                             return false !== stristr($value->title, $searched);

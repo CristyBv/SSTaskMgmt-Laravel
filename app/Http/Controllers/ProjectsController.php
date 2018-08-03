@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Project;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+use DB;
 
 class ProjectsController extends Controller
 {
@@ -158,5 +159,20 @@ class ProjectsController extends Controller
         ];
         return view('project.index')->with('projects', $paginator)->with('data', $data);
         
+    }
+
+    public function search(Request $request) {
+        $what = $request->get('search');
+        if($what != '') {
+            $projects = DB::table('projects')->where('title', 'like', '%'.$what.'%')->get();
+            $data = [];
+            foreach($projects as $project) {
+                array_push($data, [
+                    'id' => $project->id,
+                    'text' => $project->title,
+                ]);
+            }
+            echo json_encode($data);
+        }      
     }
 }

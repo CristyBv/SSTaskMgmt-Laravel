@@ -3,9 +3,9 @@ use \App\User;
 use \App\Task;
 use \App\Project;
 
-if($data['desc'] != null)
-    $group = $user->creations->sortByDesc('status')->groupBy($data['filter']);
-else $group = $user->creations->sortBy('status')->groupBy($data['filter']);
+if(session('groupdesc') != null)
+    $group = $user->creations->sortByDesc('status')->groupBy(session('groupby'));
+else $group = $user->creations->sortBy('status')->groupBy(session('groupby'));
 
 echo "<thead>";
     echo "<tr><th> Status </th></tr>";
@@ -16,7 +16,7 @@ echo "<thead>";
                 echo Config::get('status')[$id];
             echo "</td>";
             echo "<td>";
-                echo "<table class='table table-striped'>";
+                echo "<table class='table table-striped task-table'>";
                     echo "<tr>";
                         echo "<th>". "Title". "</th>";
                         echo "<th>". "User". "</th>";
@@ -28,11 +28,11 @@ echo "<thead>";
                         echo "<th>" . "</th>";
                     echo "</tr>";
 
-                    if($data['taskdesc'] != null)
-                        $task_sorted = $task->sortByDesc($data['filtersort']);
-                    else $task_sorted = $task->sortBy($data['filtersort']);
+                    if(session('taskdesc') != null)
+                        $task_sorted = $task->sortByDesc(session('tasksort'));
+                    else $task_sorted = $task->sortBy(session('tasksort'));
 
-                    $searched = $data['searched'];
+                    $searched = session('searched');
                     if($searched != null || $searched != '')
                         $task_sorted = $task_sorted->filter(function ($value, $key) use ($searched) {
                             return false !== stristr($value->title, $searched);
@@ -59,7 +59,7 @@ echo "<thead>";
                                 </div>
                             {!! Form::close() !!}
                         </div>
-                        <button type="button" class="btn btn-info popoverbutton" data-toggle="popover" title="Forward To" data-id="{{ $tsk->id }}>Forward</button>
+                        <button type="button" class="btn btn-info popoverbutton" data-toggle="popover" title="Forward To" data-id="{{ $tsk->id }}">Forward</button>
                         <?php
                         echo "</td>";                                                                        
                         echo "</tr>";
