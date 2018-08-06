@@ -54,4 +54,19 @@
             @endif
         </div>
     </div>
+
+    <script type="text/javascript">
+        function ConfirmDelete() {
+                if (confirm("Are you sure you want to delete?")) return true;
+                else return false;
+            }
+
+        function show(id) {
+            if ($("#" + id).length) {
+                if ($("#" + id).css('display') == 'none')
+                    $("#" + id).css('display', 'block');
+                else $("#" + id).css('display', 'none');
+            }
+        }
+    </script>
 @endsection
