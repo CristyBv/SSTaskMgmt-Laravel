@@ -29,12 +29,15 @@ class ProjectsController extends Controller
     public function index()
     {
         $projects = Project::orderBy('title')->paginate(5); //->sortBy('title')->paginate(1);
-        $data = [
-            'filtersort' => 'title',
-            'projectdesc' => null,
-            'searched' => null,
-        ];
-        return view('project.index')->with('projects', $projects)->with('data', $data);
+        if(!session()->has('filtredproject')) {
+            session([
+                'filtredproject' => 'default',
+                'projectsort' => 'title',
+                'projectdesc' => null,
+                'projectsearch' => null,
+            ]);
+        }   
+        return view('project.index')->with('projects', $projects);
     }
 
     /**
@@ -152,12 +155,13 @@ class ProjectsController extends Controller
             'query' => $request->query(),
         ]);
 
-        $data = [
-            'filtersort' => $request->sortproject,
+        session([
+            'filtredproject' => 'used',
+            'projectsort' => $request->sortproject,
             'projectdesc' => $request->projectdesc,
-            'searched' => $request->searchproject,
-        ];
-        return view('project.index')->with('projects', $paginator)->with('data', $data);
+            'projectsearch' => $request->searchproject,
+        ]);
+        return view('project.index')->with('projects', $paginator);
         
     }
 

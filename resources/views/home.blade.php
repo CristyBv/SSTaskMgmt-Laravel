@@ -12,7 +12,7 @@
             <div class="card-body" id="filterbody">
                 <div class="row">
                     <div class="col-sm">
-                        {!! Form::open(['action' => ['TasksController@filter'], 'method' => 'GET']) !!}
+                        {!! Form::open(['action' => ['TasksController@filter'], 'method' => 'GET', 'id' => 'filterform']) !!}
                         {{ Form::label('group','Grupeaza dupa: ') }}
                         <div class="form-group">
                             {{ Form::radio('group', 'user_id', (session('groupby') == 'user_id'), ['id' => 'group-0']) }}
@@ -42,7 +42,7 @@
                             {{ Form::label('taskdesc','desc') }}
                         </div>
                         <div class="form-group">
-                            {{ Form::text('searchtask', session('searched'), ['id' => 'searchtask', 'placeholder' => 'Search Tasks']) }}
+                            {{ Form::text('searchtask', session('searched'), ['id' => 'searchtask', 'placeholder' => 'Search Tasks', 'class' => 'form-control']) }}
                         </div>
                     </div>
                     <div class="col-sm">
@@ -75,7 +75,7 @@
                             {{ Form::label('taskdesc_mytask','desc') }}
                         </div>
                         <div class="form-group">
-                            {{ Form::text('searchtask_mytask', session('searched_mytask'), ['id' => 'searchtask_mytask', 'placeholder' => 'Search Tasks']) }}
+                            {{ Form::text('searchtask_mytask', session('searched_mytask'), ['id' => 'searchtask_mytask', 'placeholder' => 'Search Tasks', 'class' => 'form-control']) }}
                         </div>
                     </div>
                 </div>
@@ -150,7 +150,6 @@
 @endsection
 
 @section('scripts')
-
     <script type="text/javascript">
         function show(id) {
             if ($("#" + id).length) {

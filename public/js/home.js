@@ -140,6 +140,10 @@ $(document).ready(function () {
             });
         }
     });
+
+    $('[name=group], [name=group_mytask], [name=groupdesc], [name=groupdesc_mytask], [name=sorttask], [name=sorttask_mytask], [name=taskdesc], [name=taskdesc_mytask], [name=searchtask], [name=searchtask_mytask]').change(function () {
+        $('#filterform').submit();
+    });
 });
 
 /***/ })
