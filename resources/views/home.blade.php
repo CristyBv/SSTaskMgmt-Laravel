@@ -148,3 +148,19 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+
+    <script type="text/javascript">
+        function show(id) {
+            if ($("#" + id).length) {
+                if ($("#" + id).css('display') == 'none')
+                    $("#" + id).css('display', 'block');
+                else $("#" + id).css('display', 'none');
+            }
+        }
+        var userroute = "{{ route('users.search') }}";
+        var taskshow = "{{ route('tasks.show',':id') }}";
+    </script>        
+        <script type="text/javascript" src="{{ asset('js/home.js') }}"></script>
+@endsection

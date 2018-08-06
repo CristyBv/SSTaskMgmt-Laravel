@@ -43,7 +43,15 @@ class TasksController extends Controller
     public function create()
     {
         $data = $this->create_data();
-
+        if(!session()->has('lasttask')) {
+            session([
+                'task_user' => [key($data['users']) => current($data['users'])],
+                'task_project' => [key($data['projects']) => current($data['projects'])],
+                'task_status' => [key($data['status']) => current($data['status'])],
+                'task_priority' => [key($data['priorities']) => current($data['priorities'])],
+                'task_date' => \Carbon\Carbon::now()->toDateString(),
+            ]);
+        }
         return view('task.create')->with('data',$data);
     }
 
@@ -58,6 +66,23 @@ class TasksController extends Controller
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
+            'user' => 'required',
+            'project' => 'required',
+            'status' => 'required',
+            'priority' => 'required',
+            'date' => 'required',
+        ]);
+
+        $user = User::find($request->user);
+        $project = Project::find($request->project);
+
+        session([
+            'lasttask' => 'open',
+            'task_user' => [$request->user => $user->name],
+            'task_project' => [$request->project => $project->title],
+            'task_status' => [$request->status => Config::get('status')[$request->status]],
+            'task_priority' => [$request->priority => Config::get('priorities')[$request->priority]],
+            'task_date' => $request->date,
         ]);
 
         if($request->status != count(Config::get('status'))) {
@@ -78,10 +103,8 @@ class TasksController extends Controller
             $history->forward_by = $task->creator_id;
             $history->save();
 
-            $user = User::find($request->user);
             $user->count++;
             $user->save();
-            $project = Project::find($request->project);
             $project->count++;
             $project->save();
 
