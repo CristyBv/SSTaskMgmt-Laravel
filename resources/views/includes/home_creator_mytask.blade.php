@@ -60,7 +60,7 @@ echo "<thead>";
                                     </div>
                                 {!! Form::close() !!}
                             </div>
-                            <button type="button" class="btn btn-info popoverbutton" data-toggle="popover" title="Forward To" data-id="{{ $tsk->id }}">Forward</button>
+                            <button type="button" class="btn btn-info popoverbutton" data-toggle="popover" title="Forward To" data-id="{{ $tsk->id }}">Fwd</button>
                             <?php
                             echo "</td>";                                                                        
                             echo "</tr>";
