@@ -1,14 +1,16 @@
 $(document).ready(function() {
 
     $('.task-table').not(':has(.taskrow)').parent().parent().css('display', 'none');
-
-    $('.taskrow').css('cursor', 'pointer');
-    $(".taskrow").on('click', function(e) {
-        if (!e.target.classList.contains('popoverbutton') && !e.target.classList.contains('editform')) {
-            taskshow = taskshow.replace(':id', $(this).data('id'));
-            window.location.replace(taskshow);
-        }
+    $('.taskrow').find('td:lt(1)').css({
+        'cursor': 'pointer',
+        'overflow': 'hidden',
     });
+
+    $(".taskrow").find('td:lt(1)').on('click', function(e) {
+        taskshow = taskshow.replace(':id', $(this).parent().data('id'));
+        window.location.replace(taskshow);
+    });
+
     $('[data-toggle="popover"]').popover({
         html: true,
         container: 'body',
@@ -67,4 +69,14 @@ $(document).ready(function() {
         .change(function() {
             $('#filterform').submit();
         });
+
+    $('.selectstatus').change(function() {
+        $(this).parent().submit();
+    });
+});
+
+$(".selectstatus").select2({
+    placeholder: "Select a Status",
+    allowClear: true,
+    width: 'auto',
 });

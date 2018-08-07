@@ -151,6 +151,10 @@
 
 @section('scripts')
     <script type="text/javascript">
+        function ConfirmDelete() {
+            if (confirm("Are you sure you want to delete?")) return true;
+            else return false;
+        }
         function show(id) {
             if ($("#" + id).length) {
                 if ($("#" + id).css('display') == 'none')
@@ -162,4 +166,8 @@
         var taskshow = "{{ route('tasks.show',':id') }}";
     </script>        
         <script type="text/javascript" src="{{ asset('js/home.js') }}"></script>
+@endsection
+
+@section('css')
+    <link href="{{ asset('css/home.css') }}" rel="stylesheet">
 @endsection

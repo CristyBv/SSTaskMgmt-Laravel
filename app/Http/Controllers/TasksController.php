@@ -285,4 +285,11 @@ class TasksController extends Controller
         
     }
 
+    public function changestatus(Request $request) {
+        $task = Task::find($request->id);
+        $task->status = $request->selectstatus;
+        $task->save();
+        return redirect()->route('home')->with('success', 'Status Updated');
+    }
+
 }

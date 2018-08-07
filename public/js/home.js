@@ -60,33 +60,35 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 46);
+/******/ 	return __webpack_require__(__webpack_require__.s = 47);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 46:
+/***/ 47:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(47);
+module.exports = __webpack_require__(48);
 
 
 /***/ }),
 
-/***/ 47:
+/***/ 48:
 /***/ (function(module, exports) {
 
 $(document).ready(function () {
 
     $('.task-table').not(':has(.taskrow)').parent().parent().css('display', 'none');
-
-    $('.taskrow').css('cursor', 'pointer');
-    $(".taskrow").on('click', function (e) {
-        if (!e.target.classList.contains('popoverbutton') && !e.target.classList.contains('editform')) {
-            taskshow = taskshow.replace(':id', $(this).data('id'));
-            window.location.replace(taskshow);
-        }
+    $('.taskrow').find('td:lt(1)').css({
+        'cursor': 'pointer',
+        'overflow': 'hidden'
     });
+
+    $(".taskrow").find('td:lt(1)').on('click', function (e) {
+        taskshow = taskshow.replace(':id', $(this).parent().data('id'));
+        window.location.replace(taskshow);
+    });
+
     $('[data-toggle="popover"]').popover({
         html: true,
         container: 'body',
@@ -144,6 +146,16 @@ $(document).ready(function () {
     $('[name=group], [name=group_mytask], [name=groupdesc], [name=groupdesc_mytask], [name=sorttask], [name=sorttask_mytask], [name=taskdesc], [name=taskdesc_mytask], [name=searchtask], [name=searchtask_mytask]').change(function () {
         $('#filterform').submit();
     });
+
+    $('.selectstatus').change(function () {
+        $(this).parent().submit();
+    });
+});
+
+$(".selectstatus").select2({
+    placeholder: "Select a Status",
+    allowClear: true,
+    width: 'auto'
 });
 
 /***/ })

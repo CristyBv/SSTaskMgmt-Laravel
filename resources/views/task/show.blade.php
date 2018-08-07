@@ -36,11 +36,10 @@
     </div>
         @if(!Auth::guest())
             @if(Auth::user()->id == $task->user_id || Auth::user()->id == $task->creator_id)
-                <a href="{{ route('tasks.edit', ['id'=> $task->id]) }}" class='btn btn-secondary float-left mr-3'>Edit</a>
-                {!! Form::open(['action' => ['TasksController@destroy', $task->id], 'method' => 'POST', 'onsubmit' => 'return ConfirmDelete()']) !!}
-                    {{ Form::hidden('_method', 'DELETE') }}
-                    {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
-                {!! Form::close() !!}
+                @include('task.edit_button', ['item' => $task])
+                @if(Auth::user()->id == $task->creator_id)
+                    @include('task.delete_button', ['item' => $task])
+                @endif
             @endif
         @endif
 

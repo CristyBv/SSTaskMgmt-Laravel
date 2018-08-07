@@ -47,15 +47,14 @@ echo "<thead>";
                             echo "<td>" . $tsk->created_at . "</td>";
                             echo "<td>"
                             ?>
-                            @include('task.edit_button', ['item' => $tsk])
+                            @include('task.edit_delete_button', ['item' => $tsk])
                             <?php
                             echo "</td>";
                             echo "<td>"
                             ?>
                             <div class="popover_content" style="display:none">
                                 {!! Form::open(['action' => ['TasksController@forward'], 'method' => 'GET']) !!}
-                                    <div class="form-group formforward">
-                                    </div>
+                                    <div class="form-group formforward"> </div>
                                 {!! Form::close() !!}
                             </div>
                             <button type="button" class="btn btn-info popoverbutton" data-toggle="popover" title="Forward To" data-id="{{ $tsk->id }}">Fwd</button>

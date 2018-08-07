@@ -12,12 +12,12 @@
                     {{ Form::radio('sortproject', 'created_at', (session('projectsort') == 'created_at'), ['id' => 'sortproject-2']) }}
                     {{ Form::label('sortproject-2','created_date') }}
                     {{ Form::radio('sortproject', 'user_id', (session('projectsort') == 'user_id'), ['id' => 'sortproject-3']) }}
-                    {{ Form::label('sortproject-3','Creator') }}
+                    {{ Form::label('sortproject-3','creator') }}
                     {{ Form::checkbox('projectdesc', 'desc', (session('projectdesc') != null), ['class' => 'ml-3', 'id' => 'projectdesc']) }}
                     {{ Form::label('projectdesc','desc') }}
                 </div>
                 <div class="form-group">
-                    {{ Form::text('searchproject', session('projectsearch'), ['id' => 'searchproject', 'placeholder' => 'Search Projects', 'class' => 'searchinput']) }}
+                    {{ Form::text('searchproject', session('projectsearch'), ['id' => 'searchproject', 'placeholder' => 'Search Projects', 'class' => 'searchinput form-control']) }}
                 </div>
                 {{ Form::submit('Filter', ['class' => 'btn btn-secondary']) }}                                             
             {!! Form::close() !!}
@@ -39,8 +39,8 @@
                             <hr>
                             @if(!Auth::guest())
                                 @if(Auth::user()->id == $project->user_id)
-                                @include('project.edit_button', ['item' => $project])
-                                @include('project.delete_button', ['item' => $project])
+                                    @include('project.edit_button', ['item' => $project])
+                                    @include('project.delete_button', ['item' => $project])
                                 @endif
                             @endif
                         </div>

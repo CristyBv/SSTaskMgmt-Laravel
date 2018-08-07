@@ -43,7 +43,9 @@ echo "<thead>";
                                 echo "<tr class='taskrow' data-id='" . $tsk->id . "'>";
                                 echo "<td>" . $tsk->title . "</td>";
                                 echo "<td>" . $tsk->creator->name . "</td>";
-                                echo "<td>" . Config::get('status')[$tsk->status] . "</td>";
+                                ?>
+                                    @include('task.status_select', ['item' => $tsk])
+                                <?php
                                 echo "<td>" . $tsk->deadline . "</td>";
                                 echo "<td>" . Config::get('priorities')[$tsk->priority] . "</td>";
                                 echo "<td>" . $tsk->created_at . "</td>";

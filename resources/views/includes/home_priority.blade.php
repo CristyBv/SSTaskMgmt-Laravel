@@ -48,7 +48,7 @@ echo "<thead>";
                         echo "<td>" . $tsk->created_at . "</td>";
                         echo "<td>"
                         ?>
-                        @include('task.edit_button', ['item' => $tsk])
+                        @include('task.edit_delete_button', ['item' => $tsk])
                         <?php
                         echo "</td>";
                         echo "<td>"
