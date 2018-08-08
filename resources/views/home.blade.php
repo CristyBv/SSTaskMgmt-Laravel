@@ -170,5 +170,5 @@
 
 @section('css')
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.jqueryui.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 @endsection
