@@ -34,19 +34,98 @@
             
         </div>
     </div>
-        @if(!Auth::guest())
-            @if(Auth::user()->id == $task->user_id || Auth::user()->id == $task->creator_id)
-                @include('task.edit_button', ['item' => $task])
-                @if(Auth::user()->id == $task->creator_id)
-                    @include('task.delete_button', ['item' => $task])
-                @endif
-            @endif
-        @endif
+    @include('task.edit_button', ['item' => $task])
+    @if(Auth::user()->id == $task->creator_id)
+        @include('task.delete_button', ['item' => $task])                    
+    @endif
+    <br>
+    <hr>
+    <div class="dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            Create Comment
+        </button>
+        <div class="dropdown-menu">
+            {!! Form::open(['action' => 'CommentsController@store', 'method' => 'POST']) !!}
+            <div class="form-group">
+                {{ Form::text('title','',['class' => 'form-control', 'placeholder' => 'Title']) }}
+            </div>
+            <div class="form-group">
+                {{ Form::textarea('body','',['id' => 'article-ckeditor', 'class' => 'form-control', 'placeholder' => 'Body Text']) }}
+            </div>
+                {{ Form::hidden('task_id', $task->id) }}
+                {{ Form::submit('Submit', ['class' => 'btn btn-primary float-right', 'style' => 'width:100%;']) }}
+            {!! Form::close() !!}
+        </div>
+    </div>
+    <br><br>
+    @if(count($comments) > 0)
+        @foreach($comments as $comment)
+            <div class="card">
+                <div class="card-header">
+                    <p class="float-left">{{ $comment->title }}</p>
+                    @if(Auth::user()->id == $comment->user_id)
+                        {!! Form::open(['action' => ['CommentsController@destroy', $comment->id], 'method' => 'POST', 'onsubmit' => 'return ConfirmDelete()']) !!}
+                            {{ Form::hidden('_method', 'DELETE') }}
+                            {{ Form::hidden('task_id', $task->id) }}
+                            {{ Form::submit('Delete', ['class' => 'btn btn-danger deleteform float-right']) }}
+                        {!! Form::close() !!}               
+                        <div class="dropup">
+                            <button type="button" class="btn btn-secondary dropdown-toggle float-right mr-3" data-toggle="dropdown">
+                                Edit
+                            </button>
+                            <div class="dropdown-menu">
+                                {!! Form::open(['action' => ['CommentsController@update', $comment->id], 'method' => 'POST']) !!}
+                                    <div class="form-group">
+                                        {{ Form::text('title', $comment->title,['class' => 'form-control', 'placeholder' => 'Title']) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ Form::textarea('body', $comment->body, ['id' => 'article-ckeditor'.$comment->id, 'class' => 'form-control', 'placeholder' => 'Body Text']) }}
+                                    </div>
+                                    {{ Form::hidden('_method','PUT') }}
+                                    {{ Form::hidden('task_id', $task->id) }}
+                                    {{ Form::submit('Submit', ['class' => 'btn btn-primary float-right', 'style' => 'width:100%;']) }}
+                                {!! Form::close() !!}
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                <div class="card-body">
+                    {!! $comment->body !!}
+                </div>
+                <div class="card-footer">
+                    Written on {{ $comment->created_at }} by {{ $comment->user->name }}                          
+                </div>
+            </div>
+            <br><br>
+        @endforeach
+        {{ $comments->links() }}
+    @else
+        This task has no comments!
+    @endif
+    
 
-<script type="text/javascript">
-    function ConfirmDelete() {
+@endsection
+
+@section('scripts')
+    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+    <script> 
+        $('textarea').each(function() {
+            CKEDITOR.replace( $(this).attr('id') );
+        });
+    </script>
+    
+    <script type="text/javascript">
+        function ConfirmDelete() {
             if (confirm("Are you sure you want to delete?")) return true;
             else return false;
         }
 </script>
+@endsection
+
+@section('css')
+    <style>
+        .dropdown-menu {
+            padding: 1em;
+        }    
+    </style>
 @endsection

@@ -16,7 +16,7 @@ echo "<thead>";
                 echo Config::get('status')[$id];
             echo "</td>";
             echo "<td>";
-                echo "<table class='table table-striped task-table'>";
+                echo "<table class='table table-striped task-table'> <thead>";
                     echo "<tr>";
                         echo "<th>". "Title". "</th>";
                         echo "<th>". "User". "</th>";
@@ -26,7 +26,7 @@ echo "<thead>";
                         echo "<th>". "Created Date". "</th>";
                         echo "<th>" . "</th>";
                         echo "<th>" . "</th>";
-                    echo "</tr>";
+                    echo "</tr> </thead> <tbody>";
 
                     if(session('taskdesc') != null)
                         $task_sorted = $task->sortByDesc(session('tasksort'));
@@ -64,7 +64,7 @@ echo "<thead>";
                         echo "</td>";                                                                        
                         echo "</tr>";
                     }
-                echo "</table>";
+                echo "</tbody> </table>";
             echo "</td>";
         echo "</tr>";
     }

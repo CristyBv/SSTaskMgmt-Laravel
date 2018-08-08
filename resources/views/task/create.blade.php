@@ -94,11 +94,12 @@
         {{ Form::submit('Submit',['class' => 'btn btn-primary float-right', 'style' => 'width:100%;']) }}
     {!! Form::close() !!}
     <br>
-    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
-    <script> CKEDITOR.replace( 'article-ckeditor' );</script>
+    
 @endsection
 
 @section('scripts')
+        <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+        <script> CKEDITOR.replace( 'article-ckeditor' );</script>
         <script type="text/javascript">
                 var userroute = "{{ route('users.search') }}";
                 var projectroute = "{{ route('projects.search') }}";

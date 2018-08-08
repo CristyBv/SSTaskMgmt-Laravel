@@ -85,7 +85,7 @@
                     </div>
                     <div class="form-group">
                         {{ Form::label('body','Description') }}
-                        {{ Form::textarea('body', $task->body, ['id' => 'article-ckeditor', 'class' => 'form-control', 'placeholder' => 'Body Text']) }}
+                        {{ Form::textarea('body', $task->body, ['id' => 'article-ckeditor', 'class' => 'form-control', 'placeholder' => 'Body Text', 'readonly' => $readonly]) }}
                     </div>
             </div>
         </div>
@@ -99,8 +99,8 @@
 
 @section('scripts')
         <script type="text/javascript">
-                var userroute = "{{ route('users.search') }}";
-                var projectroute = "{{ route('projects.search') }}";
+            var userroute = "{{ route('users.search') }}";
+            var projectroute = "{{ route('projects.search') }}";
 </script>        
         <script type="text/javascript" src="{{ asset('js/create_task.js') }}"></script>
 @endsection

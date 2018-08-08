@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Http\Request;
 use App\Task;
 use App\User;
 use App\Project;
 use App\History_task;
+use App\Task_comment;
 use Config;
 use DB;
 
@@ -121,11 +123,23 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $task = Task::find($id);
         $forwards = $task->history_tasks;
-        return view('task.show')->with('task', $task)->with('history', $forwards);
+        $comments = $task->comments->sortByDesc('created_at');
+
+        $page = $request->page;
+        $perPage = 5;
+
+        $paginator = new Paginator($comments->forPage($page, $perPage), count($comments), $perPage, $page, [
+            'path'  => $request->url(),
+            'query' => $request->query(),
+        ]);
+
+        if(auth()->user()->id == $task->user_id || auth()->user()->id == $task->creator_id)
+            return view('task.show')->with('task', $task)->with('history', $forwards)->with('comments', $paginator);
+        else return redirect()->route('home')->with('error', 'You have no rights to view that task');
     }
 
     /**
@@ -200,7 +214,7 @@ class TasksController extends Controller
     {
         $task = Task::find($id);
 
-        if(auth()->user()->id === $task->user_id || auth()->user()->id === $task->creator_id) {
+        if(auth()->user()->id == $task->user_id || auth()->user()->id == $task->creator_id) {
             $task->delete();
         }
         else return redirect()->route('home')->with('error', 'Unauthorized Page');

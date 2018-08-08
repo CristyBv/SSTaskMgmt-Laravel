@@ -150,7 +150,7 @@
 @endsection
 
 @section('scripts')
-    <script type="text/javascript">
+    <script type="text/javascript">   
         function ConfirmDelete() {
             if (confirm("Are you sure you want to delete?")) return true;
             else return false;
@@ -170,4 +170,5 @@
 
 @section('css')
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.jqueryui.min.css" rel="stylesheet" type="text/css">
 @endsection

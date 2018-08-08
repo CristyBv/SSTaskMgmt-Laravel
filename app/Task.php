@@ -22,4 +22,8 @@ class Task extends Model
     public function history_tasks(){
         return $this->hasMany('App\History_task');
     }
+
+    public function comments(){
+        return $this->hasMany('App\Task_Comment');
+    }
 }

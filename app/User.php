@@ -69,4 +69,8 @@ class User extends Authenticatable
     public function forward(){
         return $this->hasMany('App\History_task', 'forward_by');
     }
+
+    public function comments(){
+        return $this->hasMany('App\Task_Comment');
+    }
 }

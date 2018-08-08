@@ -1,6 +1,16 @@
 $(document).ready(function() {
 
-    $('.task-table').not(':has(.taskrow)').parent().parent().css('display', 'none');
+    $('.task-table').each(function() {
+        $(this).DataTable({
+            responsive: true
+        });
+        $(this).addClass('table-responsive');
+    });
+    $('.dataTables_length').each(function() {
+        $(this).addClass('bs-select');
+    });
+
+    $('.task-table tbody').not(':has(.taskrow)').parent().parent().css('display', 'none');
     $('.taskrow').find('td:lt(1)').css({
         'cursor': 'pointer',
         'overflow': 'hidden',

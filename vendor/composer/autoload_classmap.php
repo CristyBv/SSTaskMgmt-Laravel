@@ -34,6 +34,7 @@ return array(
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
     'App\\Http\\Controllers\\ProjectsController' => $baseDir . '/app/Http/Controllers/ProjectsController.php',
     'App\\Http\\Controllers\\TasksController' => $baseDir . '/app/Http/Controllers/TasksController.php',
+    'App\\Http\\Controllers\\UsersController' => $baseDir . '/app/Http/Controllers/UsersController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',
     'App\\Http\\Middleware\\RedirectIfAuthenticated' => $baseDir . '/app/Http/Middleware/RedirectIfAuthenticated.php',

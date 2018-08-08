@@ -16,7 +16,7 @@ echo "<thead>";
                 echo Config::get('priorities')[$id];
             echo "</td>";
             echo "<td>";
-                echo "<table class='table table-striped task-table'>";
+                echo "<table class='table table-striped task-table'> <thead>";
                     echo "<tr>";
                         echo "<th>". "Title". "</th>";
                         echo "<th>". "Creator". "</th>";
@@ -26,7 +26,7 @@ echo "<thead>";
                         echo "<th>". "Created Date". "</th>";
                         echo "<th>" . "</th>";
                         echo "<th>" . "</th>";
-                    echo "</tr>";
+                    echo "</tr> </thead> <tbody>";
 
                     if(session('taskdesc_mytask') != null)
                         $task_sorted = $task->sortByDesc(session('tasksort_mytask'));
@@ -68,7 +68,7 @@ echo "<thead>";
                             echo "</tr>";
                         }
                     }
-                echo "</table>";
+                echo "</tbody> </table>";
             echo "</td>";
         echo "</tr>";
     }

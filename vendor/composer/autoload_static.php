@@ -400,6 +400,7 @@ class ComposerStaticInit0a2e5a2b3d277e39fe12f3d63279b160
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\ProjectsController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProjectsController.php',
         'App\\Http\\Controllers\\TasksController' => __DIR__ . '/../..' . '/app/Http/Controllers/TasksController.php',
+        'App\\Http\\Controllers\\UsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/UsersController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
