@@ -26,11 +26,25 @@
     <div class="card dropdown">
         <div class="card-header dropdown-toggle border border-secondary" onclick="show('projectsbody')">Projects</div>
         <div class="card-body" id="projectsbody">
-            <a href="{{ route('projects.create') }}" class="btn btn-primary">Create Project</a>
+            <div class="dropdown">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Create Project
+                </button>
+                <div class="dropdown-menu">
+                    {!! Form::open(['action' => 'ProjectsController@store', 'method' => 'POST']) !!}
+                        <div class="form-group">
+                            {{ Form::text('title','',['class' => 'form-control', 'placeholder' => 'Title']) }}
+                        </div>
+                        <div class="form-group">
+                            {{ Form::textarea('body','',['id' => 'article-ckeditor', 'class' => 'form-control', 'placeholder' => 'Body Text']) }}
+                        </div>
+                        {{ Form::submit('Submit', ['class' => 'btn btn-primary', 'style' => 'width:100%;']) }}
+                    {!! Form::close() !!}
+                </div>
+            </div>
             <hr>
-            @if(count($projects) > 0)
-                @foreach($projects as $project)
-                    @if(session('projectsearch') == null || session('projectsearch') == '' || strpos(strtolower($project->title), strtolower(session('projectsearch'))) !== false) 
+            @if(count($projects) > 0)          
+                @foreach($projects as $project)                
                     <div class="card border-2 border-info">
                         <div class="card-header ">{{ $project->title }}</div>
                         <div class="card-body">{!! $project->body !!}</div>
@@ -39,14 +53,29 @@
                             <hr>
                             @if(!Auth::guest())
                                 @if(Auth::user()->id == $project->user_id)
-                                    @include('project.edit_button', ['item' => $project])
-                                    @include('project.delete_button', ['item' => $project])
+                                @include('project.delete_button', ['item' => $project])
+                                <div class="dropup">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle float-right mr-3" data-toggle="dropdown">
+                                        Edit
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        {!! Form::open(['action' => ['ProjectsController@update', $project->id], 'method' => 'POST']) !!}
+                                            <div class="form-group">
+                                                {{ Form::text('title', $project->title, ['class' => 'form-control', 'placeholder' => 'Title']) }}
+                                            </div>
+                                            <div class="form-group">
+                                                    {{ Form::textarea('body', $project->body, ['id' => 'article-ckeditor'.$project->id, 'class' => 'form-control', 'placeholder' => 'Body Text']) }}
+                                            </div>
+                                            {{ Form::hidden('_method','PUT') }}
+                                            {{ Form::submit('Submit',['class' => 'btn btn-primary']) }}
+                                        {!! Form::close() !!}
+                                    </div>
+                                </div>
                                 @endif
                             @endif
                         </div>
                     </div>
                     <br>
-                    @endif
                 @endforeach
                 {{ $projects->links() }}
             @else
@@ -57,12 +86,18 @@
 @endsection
 
 @section('scripts')
+
+    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
+        
+        $('textarea').each(function() {
+            CKEDITOR.replace( $(this).attr('id') );
+        });
 
         function ConfirmDelete() {
-                    if (confirm("Are you sure you want to delete?")) return true;
-                    else return false;
-                }
+                if (confirm("Are you sure you want to delete?")) return true;
+                else return false;
+            }
 
         function show(id) {
             if ($("#" + id).length) {
@@ -71,8 +106,14 @@
                 else $("#" + id).css('display', 'none');
             }
         }
-        var userroute = "{{ route('users.search') }}";
-        var taskshow = "{{ route('tasks.show',':id') }}";
-    </script>        
+</script>        
     <script type="text/javascript" src="{{ asset('js/project.js') }}"></script>
+@endsection
+
+@section('css')
+    <style>
+        .dropdown-menu {
+            padding: 1em;
+        }    
+    </style>
 @endsection

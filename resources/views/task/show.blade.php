@@ -112,7 +112,7 @@
         $('textarea').each(function() {
             CKEDITOR.replace( $(this).attr('id') );
         });
-    </script>
+</script>
     
     <script type="text/javascript">
         function ConfirmDelete() {

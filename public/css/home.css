@@ -15,3 +15,12 @@
   display: none !important;
 }
 
+.paginate_button {
+  padding: 0 !important;
+}
+
+.previous,
+.next {
+  margin: 0.5em !important;
+}
+

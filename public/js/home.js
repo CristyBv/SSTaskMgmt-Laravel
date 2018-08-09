@@ -88,12 +88,20 @@ $(document).ready(function () {
         $(this).addClass('bs-select');
     });
 
-    $('.task-table tbody').not(':has(.taskrow)').parent().parent().css('display', 'none');
     $('.taskrow').find('td:lt(1)').css({
         'cursor': 'pointer',
         'overflow': 'hidden'
     });
 
+    $('.taskrow').find('td:lt(1)').hover(function () {
+        $(this).css('font-weight', 'bold');
+    }, function () {
+        $(this).css('font-weight', 'normal');
+    });
+
+    $('.task-table tbody tr').each(function () {
+        if (!$(this).hasClass('taskrow')) $(this).closest('table').closest('tr').css('display', 'none');
+    });
     $(".taskrow").find('td:lt(1)').on('click', function (e) {
         taskshow = taskshow.replace(':id', $(this).parent().data('id'));
         window.location.replace(taskshow);
@@ -102,7 +110,7 @@ $(document).ready(function () {
     $('[data-toggle="popover"]').popover({
         html: true,
         container: 'body',
-        placement: 'bottom',
+        placement: 'right',
         trigger: 'manual',
         content: function content() {
             return $('.popover_content').html();

@@ -28,7 +28,7 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects = Project::orderBy('title')->paginate(5); //->sortBy('title')->paginate(1);
+        $projects = Project::orderBy('title')->paginate(5);
         if(!session()->has('filtredproject')) {
             session([
                 'filtredproject' => 'default',
@@ -36,6 +36,30 @@ class ProjectsController extends Controller
                 'projectdesc' => null,
                 'projectsearch' => null,
             ]);
+        } else {
+            $projectsort = session('projectsort');
+            if(session('projectdesc') != null) {
+                if($projectsort == 'user_id')
+                    $projects = Project::join('users', 'user_id', '=', 'users.id')->orderByDesc('users.name')->select('projects.*')->get();
+                else $projects = Project::all()->sortByDesc($projectsort);
+            } else {
+                if($projectsort == 'user_id')
+                    $projects = Project::join('users', 'user_id', '=', 'users.id')->orderBy('users.name')->select('projects.*')->get();
+                else $projects = Project::all()->sortBy($projectsort);
+            }
+    
+            $searched = session('projectsearch');
+            if($searched != null || $searched != '')
+                $projects = $projects->filter(function ($value, $key) use ($searched) {
+                    return false !== stristr($value->title, $searched);
+                });
+    
+            $page = 1;
+            $perPage = 5;
+                
+            $paginator = new Paginator($projects->forPage($page, $perPage), count($projects), $perPage, $page);
+
+            return view('project.index')->with('projects', $paginator);
         }   
         return view('project.index')->with('projects', $projects);
     }
@@ -146,6 +170,12 @@ class ProjectsController extends Controller
                 $projects = Project::join('users', 'user_id', '=', 'users.id')->orderBy('users.name')->select('projects.*')->get();
             else $projects = Project::all()->sortBy($request->sortproject);
         }
+
+        $searched = $request->searchproject;
+        if($searched != null || $searched != '')
+            $projects = $projects->filter(function ($value, $key) use ($searched) {
+                return false !== stristr($value->title, $searched);
+            });
 
         $page = $request->page;
         $perPage = 5;

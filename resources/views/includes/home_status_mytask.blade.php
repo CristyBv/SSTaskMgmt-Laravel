@@ -25,7 +25,6 @@ echo "<thead>";
                         echo "<th>". "Priority". "</th>";
                         echo "<th>". "Created Date". "</th>";
                         echo "<th>" . "</th>";
-                        echo "<th>" . "</th>";
                     echo "</tr> </thead> <tbody>";
 
                     if(session('taskdesc_mytask') != null)
@@ -47,11 +46,6 @@ echo "<thead>";
                             echo "<td>" . $tsk->deadline . "</td>";
                             echo "<td>" . Config::get('priorities')[$tsk->priority] . "</td>";                                                                
                             echo "<td>" . $tsk->created_at . "</td>";
-                            echo "<td>"
-                            ?>
-                            @include('task.edit_button', ['item' => $tsk])
-                            <?php
-                            echo "</td>";
                             echo "<td>"
                             ?>
                             <div class="popover_content" style="display:none">

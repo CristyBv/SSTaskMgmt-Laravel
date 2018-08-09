@@ -3,4 +3,5 @@ $(document).ready(function() {
         .change(function() {
             $('#projectform').submit();
         });
+
 });

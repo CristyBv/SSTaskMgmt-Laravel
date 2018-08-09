@@ -54,7 +54,7 @@ class TasksController extends Controller
                 'task_date' => \Carbon\Carbon::now()->toDateString(),
             ]);
         }
-        return view('task.create')->with('data',$data);
+        return view('task.create')->with('data', $data);
     }
 
     /**
@@ -283,6 +283,7 @@ class TasksController extends Controller
 
     public function forward(Request $request) {
         $task = Task::find($request->id);
+
         //dd($task->user_id . " " . $request->forwarduser);
         if($task->user_id != $request->forwarduser) {    
             $task->user_id = $request->forwarduser;
