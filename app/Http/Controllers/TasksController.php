@@ -55,7 +55,7 @@ class TasksController extends Controller
             ]);
         }
         //???
-        dd($user[["creationsSort",['desc','users']]]);
+        //dd($user[["creationsSort",['desc','users']]]);
         //$contentCreator = $this->createContentBySession($user, 'creator');
         //$contentReceiver = $this->createContentBySession($user, 'receiver');
         

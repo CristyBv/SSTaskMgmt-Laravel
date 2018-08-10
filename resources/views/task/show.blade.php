@@ -69,7 +69,7 @@
                             {{ Form::hidden('task_id', $task->id) }}
                             {{ Form::submit('Delete', ['class' => 'btn btn-danger deleteform float-right']) }}
                         {!! Form::close() !!}               
-                        <div class="dropup">
+                        <div class="dropdown">
                             <button type="button" class="btn btn-secondary dropdown-toggle float-right mr-3" data-toggle="dropdown">
                                 Edit
                             </button>
