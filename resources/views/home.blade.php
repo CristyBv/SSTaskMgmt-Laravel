@@ -6,7 +6,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
     <div class="card dropdown">
             <div class="card-header dropdown-toggle border border-secondary" onclick="show('filterbody')">Filter</div>
             <div class="card-body" id="filterbody">
@@ -146,7 +145,6 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @section('scripts')
@@ -163,7 +161,7 @@
             }
         }
         var userroute = "{{ route('users.search') }}";
-        var taskshow = "{{ route('tasks.show',':id') }}";
+        var taskShow = "{{ route('tasks.show',':id') }}";
     </script>        
         <script type="text/javascript" src="{{ asset('js/home.js') }}"></script>
 @endsection

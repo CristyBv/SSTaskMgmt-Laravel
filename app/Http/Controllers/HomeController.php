@@ -26,6 +26,9 @@ class HomeController extends Controller
     {
         $user_id = auth()->user()->id;
         $user = User::find($user_id);
+
+        // test if filter was ever used in this session
+
         if(!session()->has('filtred')) {
             session([
                 'filtred' => 'default',

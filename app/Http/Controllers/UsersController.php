@@ -7,6 +7,9 @@ use DB;
 
 class UsersController extends Controller
 {
+
+    // search a user using ajax requests and return options for select2
+
     public function search(Request $request) {
 
         $what = $request->get('search');

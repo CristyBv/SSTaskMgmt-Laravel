@@ -29,6 +29,9 @@ class ProjectsController extends Controller
     public function index()
     {
         $projects = Project::orderBy('title')->paginate(5);
+
+        // test if filter was ever used in this session
+
         if(!session()->has('filtredproject')) {
             session([
                 'filtredproject' => 'default',
@@ -37,6 +40,9 @@ class ProjectsController extends Controller
                 'projectsearch' => null,
             ]);
         } else {
+
+            // if it had been used, apply filter on and paginate the collection
+
             $projectsort = session('projectsort');
             if(session('projectdesc') != null) {
                 if($projectsort == 'user_id')
@@ -160,6 +166,8 @@ class ProjectsController extends Controller
     }
 
     public function filter(Request $request) {
+
+        // to take the user name and the project title, make a join
         
         if($request->projectdesc != null) {
             if($request->sortproject == 'user_id')
@@ -194,6 +202,8 @@ class ProjectsController extends Controller
         return view('project.index')->with('projects', $paginator);
         
     }
+
+    // function for ajax request to search
 
     public function search(Request $request) {
         $what = $request->get('search');

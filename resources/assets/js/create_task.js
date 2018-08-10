@@ -1,4 +1,7 @@
 $(document).ready(function() {
+
+    // constructor for datepicker, on select put the value in the date input
+
     $("#datepicker").datepicker({
         changeMonth: true,
         changeYear: true,
@@ -10,9 +13,13 @@ $(document).ready(function() {
         }
     });
 
+    // set for datepicker the last data input
+
     var lastDeadlineDate = $(this).find('#deadline_date').data('last-deadline-date');
     $("#datepicker").datepicker("setDate", lastDeadlineDate);
 });
+
+// function for radio inputs, it taks the id and value and make an option for select
 
 window.radiochange = function radiochange(name, id) {
     var radio = $('input[type=radio][name=\"' + name + '\"]:checked');
@@ -25,6 +32,8 @@ window.radiochange = function radiochange(name, id) {
     $('#' + id).empty();
     $('#' + id).append(newOption).trigger('change');
 }
+
+// constructor with ajax requests for user input
 
 $("#user").select2({
     placeholder: "Select a Name",
@@ -46,6 +55,8 @@ $("#user").select2({
         }
     }
 });
+
+// constructor with ajax requests for project input
 
 $("#project").select2({
     placeholder: "Select a Title",

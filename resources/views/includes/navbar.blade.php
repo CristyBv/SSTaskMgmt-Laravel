@@ -9,8 +9,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
-            {{-- <ul class="navbar-nav mr-auto"> </ul> --}}
-
+            @auth
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                 <a class="nav-link border border-3 rounded bg-light" href="{{ route('home') }}">Dashboard <span class="sr-only">(current)</span></a>
@@ -19,6 +18,7 @@
                 <a class="nav-link border border-3 rounded bg-light" href="{{ route('projects.index') }}">Projects <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
+            @endauth
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">

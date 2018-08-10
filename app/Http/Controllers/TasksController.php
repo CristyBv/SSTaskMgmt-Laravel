@@ -34,7 +34,91 @@ class TasksController extends Controller
      */
     public function index()
     {
+        $user_id = auth()->user()->id;
+        $user = User::find($user_id);
+
+        // test if filter was ever used in this session
+
+        if(!session()->has('filtred')) {
+            session([
+                'filtred' => 'default',
+                'groupby' => 'user_id',
+                'groupdesc' => null,
+                'tasksort' => 'title',
+                'taskdesc' => null,
+                'searched' => null,
+                'groupby_mytask' => 'creator_id',
+                'groupdesc_mytask' => null,
+                'tasksort_mytask' => 'title',
+                'taskdesc_mytask' => null,
+                'searched_mytask' => null,
+            ]);
+        }
+        //???
+        dd($user[["creationsSort",['desc','users']]]);
+        //$contentCreator = $this->createContentBySession($user, 'creator');
+        //$contentReceiver = $this->createContentBySession($user, 'receiver');
         
+        return view('home')->with('user', $user);
+    }
+
+    private function createContentBySession($user, $type) {
+
+        $data = [];
+
+        switch($type) {
+            case 'creator':
+                array_push($data, [
+                    'groupby' => session('groupby'),
+                    'groupdesc' => session('groupdesc'),
+                    'tasksort' => session('tasksort'),
+                    'taskdesc' => session('taskdesc'),
+                    ]);
+                switch(session('groupby')) {
+                    case 'user_id':
+                        
+                        break;
+                    case 'project_id':
+        
+                        break;
+                    case 'priority_id':
+        
+                        break;
+                    case 'status_id':
+                    
+                        break;
+                }
+                break;
+            case 'receiver':
+                array_push($data, [
+                    'groupby' => session('groupby_mytask'),
+                    'groupdesc' => session('groupdesc_mytask'),
+                    'tasksort' => session('tasksort_mytask'),
+                    'taskdesc' => session('taskdesc_mytask'),
+                    ]);
+                switch(session('groupby_mytask')) {
+                    case 'creator_id':
+        
+                        break;
+                    case 'project_id':
+        
+                        break;
+                    case 'priority_id':
+        
+                        break;
+                    case 'status_id':
+        
+                        break;
+                }
+                break;
+        }
+
+
+    }
+
+    private function grouHtmlTemplate($data) {
+
+
     }
 
     /**
@@ -45,6 +129,9 @@ class TasksController extends Controller
     public function create()
     {
         $data = $this->create_data();
+
+        // if it was never created a task in this session, put in select the first most used
+
         if(!session()->has('lasttask')) {
             session([
                 'task_user' => [key($data['users']) => current($data['users'])],
@@ -152,6 +239,9 @@ class TasksController extends Controller
     {
         $task = Task::find($id);
         $data = $this->create_data();
+
+        // if the user is not the creator, he will not have total acces
+
         if(auth()->user()->id == $task->user_id && auth()->user()->id != $task->creator_id) $readonly = true;
         else $readonly = false;
         if(auth()->user()->id === $task->user_id || auth()->user()->id === $task->creator_id)
@@ -196,11 +286,7 @@ class TasksController extends Controller
             $history->forward_by = $request->user()->id;
             $history->save();
         }
-        
-        // $nrstatus = count(Config::get('status'));
-        // if($request->status == $nrstatus)
-        //     $task->delete();   
-
+    
         return redirect()->route('home')->with('success', 'Task Updated');
     }
 
@@ -222,7 +308,11 @@ class TasksController extends Controller
         return redirect()->route('home')->with('success', 'Task Removed');
     }
 
+    // creates arrays for select input
+
     public function create_data(){
+
+        // users and projects are sorted by count field (number of use)
 
         $users = array();
         $users_count = User::orderByDesc('count')->take(5)->get();
@@ -237,6 +327,8 @@ class TasksController extends Controller
             $var = [$proj->id => $proj->title];
             $projects = $projects + $var;
         }
+
+        // in DB will be only the IDs of priorities and status
             
         $priorities = array();
         foreach(Config::get('priorities') as $id => $pri) {
@@ -260,10 +352,9 @@ class TasksController extends Controller
         return $data;
     }
 
-    public function filter(Request $request) {
+    // function for setting the inputs from filter in session, the actual filter is in blade
 
-        $user_id = auth()->user()->id;
-        $user = User::find($user_id);
+    public function filter(Request $request) {
         session([
             'filtred' => 'used',
             'groupby' => $request->group,
@@ -277,14 +368,15 @@ class TasksController extends Controller
             'taskdesc_mytask' => $request->taskdesc_mytask,
             'searched_mytask' => $request->searchtask_mytask,
         ]);
-        return view('home')->with('user', $user);
+        return redirect()->route('home');
         
     }
 
-    public function forward(Request $request) {
-        $task = Task::find($request->id);
+    // change the user_id and create a history task row for that
 
-        //dd($task->user_id . " " . $request->forwarduser);
+    public function forward(Request $request) {
+
+        $task = Task::find($request->id);
         if($task->user_id != $request->forwarduser) {    
             $task->user_id = $request->forwarduser;
             $task->save();
@@ -296,9 +388,10 @@ class TasksController extends Controller
             return redirect()->route('home')->with('success', "Task Forwarded");
         } else {
             return redirect()->route('home')->with('error', "You can't forward to the same user");
-        }
-        
+        }        
     }
+
+    // change the status of a task
 
     public function changestatus(Request $request) {
         $task = Task::find($request->id);

@@ -31,6 +31,8 @@ class User extends Authenticatable
         return $this->hasMany('App\Task');
     }
 
+    // for sorting to do tasks by creator name and project title, make a left join
+
     public function myTasksSort($how, $which)
     {
         switch($which) {
@@ -46,6 +48,8 @@ class User extends Authenticatable
     public function creations(){
         return $this->hasMany('App\Task', 'creator_id');
     }
+
+    // for sorting creation tasks by receiver name and project title, make a left join
 
     public function creationsSort($how, $which){
         switch($which) {

@@ -77,6 +77,9 @@ module.exports = __webpack_require__(50);
 /***/ (function(module, exports) {
 
 $(document).ready(function () {
+
+    // auto submit on filter change
+
     $('[name=sortproject], [name=projectdesc], [name=searchproject]').change(function () {
         $('#projectform').submit();
     });
