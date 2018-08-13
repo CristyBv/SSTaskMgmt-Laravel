@@ -82,7 +82,8 @@ $(document).ready(function () {
 
     $('.task-table').each(function () {
         $(this).DataTable({
-            responsive: true
+            responsive: true,
+            "ordering": false
         });
         $(this).addClass('table-responsive');
     });

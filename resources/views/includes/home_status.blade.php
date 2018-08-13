@@ -51,7 +51,7 @@ echo "<thead>";
                         @include('task.edit_delete_button', ['item' => $tsk])
                         <?php
                         echo "</td>";
-                        echo "<td>"
+                        echo "<td>" 
                         ?>
                         <div class="popover_content" style="display:none">
                             {!! Form::open(['action' => ['TasksController@forward', $tsk->id], 'method' => 'GET']) !!}

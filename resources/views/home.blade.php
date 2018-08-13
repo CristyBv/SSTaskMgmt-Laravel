@@ -93,7 +93,8 @@
                             <hr>
                             @if(count($user->creations) > 0)
                                 <table class="table table-responsive">
-                                    @switch(session('groupby'))
+                                    {!! $contentCreator !!}
+                                    {{-- @switch(session('groupby'))
                                         @case('user_id')
                                             @include('includes.home_user')
                                             @break
@@ -106,7 +107,7 @@
                                         @case('status')
                                             @include('includes.home_status')
                                             @break
-                                    @endswitch
+                                    @endswitch --}}
                                 </table>
                             @else
                                 <p>You have no tasks!</p>
@@ -121,20 +122,7 @@
                             <hr>
                             @if(count($user->tasks) > 0)
                                 <table class="table table-responsive">
-                                    @switch(session('groupby_mytask'))
-                                        @case('creator_id')
-                                            @include('includes.home_creator_mytask')
-                                            @break
-                                        @case('project_id')
-                                            @include('includes.home_project_mytask')
-                                            @break
-                                        @case('priority')
-                                            @include('includes.home_priority_mytask')
-                                            @break
-                                        @case('status')
-                                            @include('includes.home_status_mytask')
-                                            @break
-                                    @endswitch
+                                    {!! $contentReceiver !!}
                                 </table>
                             @else
                                 <p>You have no tasks!</p>

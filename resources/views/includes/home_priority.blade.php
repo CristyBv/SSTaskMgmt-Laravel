@@ -24,7 +24,7 @@ echo "<thead>";
                         echo "<th>". "Status". "</th>";
                         echo "<th>". "Deadline". "</th>";
                         echo "<th>". "Created Date". "</th>";
-                        echo "<th>" . "</th>";
+                        echo "<th>" . "</th>"; 
                         echo "<th>" . "</th>";
                     echo "</tr> </thead> <tbody>";
 
