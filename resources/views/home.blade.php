@@ -9,6 +9,9 @@
     <div class="card dropdown">
             <div class="card-header dropdown-toggle border border-secondary" onclick="show('filterbody')">Filter</div>
             <div class="card-body" id="filterbody">
+                <div class="form-group">
+                    {{ Form::select('search_task_live', [], null,    ['id' => 'search_task_live', 'placeholder' => 'Search a Task', 'class' => 'form-control']) }}
+                </div>
                 <div class="row">
                     <div class="col-sm">
                         {!! Form::open(['action' => ['TasksController@filter'], 'method' => 'GET', 'id' => 'filterform']) !!}
@@ -41,7 +44,7 @@
                             {{ Form::label('taskdesc','desc') }}
                         </div>
                         <div class="form-group">
-                            {{ Form::text('searchtask', session('searched'), ['id' => 'searchtask', 'placeholder' => 'Search Tasks', 'class' => 'form-control']) }}
+                            {{ Form::text('searchtask', session('searched'), ['id' => 'searchtask', 'placeholder' => 'Filter Tasks', 'class' => 'form-control']) }}
                         </div>
                     </div>
                     <div class="col-sm">
@@ -74,56 +77,43 @@
                             {{ Form::label('taskdesc_mytask','desc') }}
                         </div>
                         <div class="form-group">
-                            {{ Form::text('searchtask_mytask', session('searched_mytask'), ['id' => 'searchtask_mytask', 'placeholder' => 'Search Tasks', 'class' => 'form-control']) }}
+                            {{ Form::text('searchtask_mytask', session('searched_mytask'), ['id' => 'searchtask_mytask', 'placeholder' => 'Filter Tasks', 'class' => 'form-control']) }}
                         </div>
                     </div>
                 </div>
-                {{ Form::submit('Filter', ['class' => 'btn btn-secondary float-right']) }}                                             
+                <label class="switch">
+                    {{ Form::checkbox('switchDataTable', 'on', (session('switch_dataTable') != null), ['class' => 'ml-3', 'id' => 'switch_dataTable']) }}                       
+                    <span class="slider round" data-toggle="tooltip" data-placement="right" title="Enable/Disable DataTable Structure" id="switch_span"></span>
+                </label> 
+                {{ Form::submit('Filter', ['class' => 'btn btn-secondary float-right']) }}
                 {!! Form::close() !!}
+                           
             </div>
     </div>
     <div class="row justify-content-center">
         <div class="col-sm">            
             <div class="row justify-content-center">
-                <div class="col-sm-6">
+                <div class="col-sm">
                     <div class="card">
                         <div class="card-header border border-secondary dropdown-toggle" onclick="show('createdtasks')">Tasks for others</div>
                         <div class="card-body" id="createdtasks">
                             <a href="{{ route('tasks.create') }}" class="btn btn-primary">Create Task</a>
                             <hr>
                             @if(count($user->creations) > 0)
-                                <table class="table table-responsive">
-                                    {!! $contentCreator !!}
-                                    {{-- @switch(session('groupby'))
-                                        @case('user_id')
-                                            @include('includes.home_user')
-                                            @break
-                                        @case('project_id')
-                                            @include('includes.home_project')
-                                            @break
-                                        @case('priority')
-                                            @include('includes.home_priority')
-                                            @break
-                                        @case('status')
-                                            @include('includes.home_status')
-                                            @break
-                                    @endswitch --}}
-                                </table>
+                                {!! $contentCreator !!}
                             @else
                                 <p>You have no tasks!</p>
                             @endif
                         </div>     
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm">
                     <div class="card">
                         <div class="card-header border border-secondary dropdown-toggle" onclick="show('mytasks')">My Tasks</div>
                         <div class="card-body" id="mytasks">
                             <hr>
-                            @if(count($user->tasks) > 0)
-                                <table class="table table-responsive">
-                                    {!! $contentReceiver !!}
-                                </table>
+                            @if(count($user->tasks->where('status', '<', count(Config::get('status')))) > 0)
+                                {!! $contentReceiver !!}
                             @else
                                 <p>You have no tasks!</p>
                             @endif
@@ -148,8 +138,9 @@
                 else $("#" + id).css('display', 'none');
             }
         }
-        var userroute = "{{ route('users.search') }}";
+        var userRoute = "{{ route('users.search') }}";
         var taskShow = "{{ route('tasks.show',':id') }}";
+        var taskSearch = "{{ route('tasks.search') }}";
     </script>        
         <script type="text/javascript" src="{{ asset('js/home.js') }}"></script>
 @endsection

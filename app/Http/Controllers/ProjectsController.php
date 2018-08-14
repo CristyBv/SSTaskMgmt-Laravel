@@ -186,7 +186,7 @@ class ProjectsController extends Controller
             });
 
         $page = $request->page;
-        $perPage = 5;
+        $perPage = Config::get('projects')['perPage'];
 
         $paginator = new Paginator($projects->forPage($page, $perPage), count($projects), $perPage, $page, [
             'path'  => $request->url(),

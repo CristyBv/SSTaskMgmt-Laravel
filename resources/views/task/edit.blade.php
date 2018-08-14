@@ -7,7 +7,7 @@
     <h1>Edit a Task</h1>
     {!! Form::open(['action' => ['TasksController@update', $task->id], 'method' => 'POST']) !!}
         <div class="row row-eq-height">
-            <div class="col-sm-7">
+            <div class="col-sm-7">            
                     <div class="form-group">
                         {{ Form::label('title','Title') }}
                         {{ Form::text('title', $task->title, ['class' => 'form-control', 'placeholder' => 'Title', 'readonly' => $readonly]) }}

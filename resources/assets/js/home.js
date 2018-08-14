@@ -1,18 +1,32 @@
 $(document).ready(function() {
 
-
     // Set DataTable for all task tables
-
-    $('.task-table').each(function() {
-        $(this).DataTable({
-            responsive: true,
-            "ordering": false,
+    if ($('#switch_dataTable').is(':checked')) {
+        $('.task-table').each(function() {
+            $(this).DataTable({
+                responsive: true,
+                "ordering": false,
+            });
+            $(this).addClass('table-responsive');
         });
-        $(this).addClass('table-responsive');
+        $('.dataTables_length').each(function() {
+            $(this).addClass('bs-select');
+        });
+    }
+
+    // set display none for groups without rows (with or without data table structure)
+
+    $('.dataTables_empty').each(function() {
+        $(this).closest('.groupRow').css('display', 'none');
     });
-    $('.dataTables_length').each(function() {
-        $(this).addClass('bs-select');
+
+    $('tbody').each(function() {
+        if ($(this).children().length == 0) $(this).closest('.groupRow').css('display', 'none');
     });
+
+    // tooltip for data table switch
+
+    $('#switch_span').tooltip();
 
     // set css and hover for first td of each row of task table
 
@@ -25,13 +39,6 @@ $(document).ready(function() {
         $(this).css('font-weight', 'bold');
     }, function() {
         $(this).css('font-weight', 'normal');
-    });
-
-    // set display none for groups without rows
-
-    $('.task-table tbody tr').each(function() {
-        if (!$(this).hasClass('taskrow'))
-            $(this).closest('table').closest('tr').css('display', 'none');
     });
 
     // redirect to task show if click on first td of each row
@@ -81,7 +88,7 @@ $(document).ready(function() {
                 placeholder: "Select a Name",
                 allowClear: true,
                 ajax: {
-                    url: userroute,
+                    url: userRoute,
                     dataType: 'json',
                     data: function(params) {
                         var query = {
@@ -102,7 +109,7 @@ $(document).ready(function() {
 
     // auto submit on filter change
 
-    $('[name=group], [name=group_mytask], [name=groupdesc], [name=groupdesc_mytask], [name=sorttask], [name=sorttask_mytask], [name=taskdesc], [name=taskdesc_mytask], [name=searchtask], [name=searchtask_mytask]')
+    $('[name=group], [name=group_mytask], [name=groupdesc], [name=groupdesc_mytask], [name=sorttask], [name=sorttask_mytask], [name=taskdesc], [name=taskdesc_mytask], [name=searchtask], [name=searchtask_mytask], [name=switchDataTable]')
         .change(function() {
             $('#filterform').submit();
         });
@@ -112,6 +119,35 @@ $(document).ready(function() {
     $('.selectstatus').change(function() {
         $(this).parent().submit();
     });
+
+    // redirect to task show if a task is selected in search tasks live
+
+    $('#search_task_live').change(function() {
+        taskShow = taskShow.replace(':id', $(this).val());
+        window.location.replace(taskShow);
+    });
+});
+
+$("#search_task_live").select2({
+    width: '100%',
+    placeholder: "Select a Task",
+    allowClear: true,
+    ajax: {
+        url: taskSearch,
+        dataType: 'json',
+        data: function(params) {
+            var query = {
+                search: params.term,
+                type: 'public'
+            }
+            return query;
+        },
+        processResults: function(data) {
+            return {
+                results: data
+            };
+        }
+    }
 });
 
 // select2 for status select in task row
