@@ -253,7 +253,8 @@ class TasksController extends Controller
                         else if($field == 'project')
                             $content.= $tsk->$field->title;
                         else if($field == 'status')
-                            $content.= view('task.status_select', ['item' => $tsk])->render();
+                            if($myTask == false) $content.= Config::get($field)[$tsk->status];
+                            else $content.= view('task.status_select', ['item' => $tsk])->render();                            
                         else if($field == 'priorities')
                             $content.= Config::get($field)[$tsk->priority];
                         else $content.= $tsk->$field;
