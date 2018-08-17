@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Project;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use DB;
+use Config;
 
 class ProjectsController extends Controller
 {
@@ -165,7 +166,7 @@ class ProjectsController extends Controller
         return redirect()->route('projects.index')->with('success', 'Project Removed');
     }
 
-    public function filter(Request $request) {
+    public function filter(Request $request) { // set session go index
 
         // to take the user name and the project title, make a join
         
@@ -175,23 +176,29 @@ class ProjectsController extends Controller
             else $projects = Project::all()->sortByDesc($request->sortproject);
         } else {
             if($request->sortproject == 'user_id')
-                $projects = Project::join('users', 'user_id', '=', 'users.id')->orderBy('users.name')->select('projects.*')->get();
-            else $projects = Project::all()->sortBy($request->sortproject);
+                $projects = Project::join('users', 'user_id', '=', 'users.id')->orderBy('users.name')->select('projects.*')->with('user');
+            else $projects = Project::orderBy($request->sortproject);
         }
 
-        $searched = $request->searchproject;
-        if($searched != null || $searched != '')
-            $projects = $projects->filter(function ($value, $key) use ($searched) {
-                return false !== stristr($value->title, $searched);
-            });
+        if($request->searchproject) {
+            $projects = $projects->where('title', 'like', '%'.$request->searchproject.'%');
+        }
 
-        $page = $request->page;
-        $perPage = Config::get('projects')['perPage'];
+        $projects = $projects->paginate(Config::get('projects')['perPage']);
 
-        $paginator = new Paginator($projects->forPage($page, $perPage), count($projects), $perPage, $page, [
-            'path'  => $request->url(),
-            'query' => $request->query(),
-        ]);
+        // $searched = $request->searchproject;
+        // if($searched != null)
+        //     $projects = $projects->filter(function ($value, $key) use ($searched) {
+        //         return false !== stristr($value->title, $searched);
+        //     });
+
+        // $page = $request->page;
+        // $perPage = Config::get('projects')['perPage'];
+
+        // $paginator = new Paginator($projects->forPage($page, $perPage), count($projects), $perPage, $page, [
+        //     'path'  => $request->url(),
+        //     'query' => $request->query(),
+        // ]);
 
         session([
             'filtredproject' => 'used',
@@ -199,7 +206,7 @@ class ProjectsController extends Controller
             'projectdesc' => $request->projectdesc,
             'projectsearch' => $request->searchproject,
         ]);
-        return view('project.index')->with('projects', $paginator);
+        return view('project.index')->with('projects', $projects);
         
     }
 
@@ -208,15 +215,16 @@ class ProjectsController extends Controller
     public function search(Request $request) {
         $what = $request->get('search');
         if($what != '') {
-            $projects = DB::table('projects')->where('title', 'like', '%'.$what.'%')->get();
-            $data = [];
-            foreach($projects as $project) {
-                array_push($data, [
-                    'id' => $project->id,
-                    'text' => $project->title,
-                ]);
-            }
-            echo json_encode($data);
+            $projects = DB::table('projects')->select('id', 'title as text')->where('title', 'like', '%'.$what.'%')->get();
+            return $projects;
+            // $data = [];
+            // foreach($projects as $project) {
+            //     array_push($data, [
+            //         'id' => $project->id,
+            //         'text' => $project->title,
+            //     ]);
+            // }
+            // echo json_encode($data);
         }      
     }
 }

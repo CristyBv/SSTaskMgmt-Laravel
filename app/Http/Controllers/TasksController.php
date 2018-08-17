@@ -360,9 +360,9 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, Task $task)
     {
-        $task = Task::find($id);
+        // $task = Task::find($id);
         $forwards = $task->history_tasks;
         $comments = $task->comments->sortByDesc('created_at');
 
@@ -464,13 +464,14 @@ class TasksController extends Controller
 
         // users and projects are sorted by count field (number of use)
 
-        $users = array();
-        $users_count = User::orderByDesc('count')->take(5)->get();
-        foreach($users_count as $user) {
-            $var = [$user->id => $user->name];
-            $users = $users + $var;
-        }
-
+        // $users = array();
+        // $users_count = User::orderByDesc('count')->take(5)->get();
+        // foreach($users_count as $user) {
+        //     $var = [$user->id => $user->name];
+        //     $users = $users + $var;
+        // }
+        $users = User::withCount('tasks')->orderByDesc('tasks_count')->take(5)->get()->pluck('name','id')->toArray();
+        
         $projects = array();
         $projects_count = Project::orderByDesc('count')->take(5)->get();
         foreach($projects_count as $proj) {
@@ -531,7 +532,8 @@ class TasksController extends Controller
         if($task->user_id != $request->forwarduser) {    
             $task->user_id = $request->forwarduser;
             $task->save();
-            $history = New History_task;
+            //$task->history_task()->create(...)
+            $history = new History_task;
             $history->task_id = $task->id;
             $history->user_id = $task->user_id;
             $history->forward_by = $request->user()->id;
@@ -565,8 +567,8 @@ class TasksController extends Controller
 
     // change the status of a task
 
-    public function changestatus(Request $request) {
-        $task = Task::find($request->id);
+    public function changestatus(Request $request, Task $task) {
+        // $task = Task::find($request->id);
         $task->status = $request->selectstatus;
         $task->save();
         return redirect()->route('home')->with('success', 'Status Updated');

@@ -3,42 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Task_comment;
+use App\Task_comment; // TaskComment
+use App\Task;
 
 class CommentsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Task $task)
     {
         $this->validate($request, [
-            'title' => 'required',
+            'title' => 'required|max:191', //modify
             'body' => 'required',
         ]);
+        //$task->comments()->create(array_add($request->all(), 'user_id', $request->user()->id));
         $comment = new Task_comment;
         $comment->title = $request->title;
         $comment->body = $request->body;
@@ -47,28 +29,6 @@ class CommentsController extends Controller
         $comment->save();
 
         return redirect()->route('tasks.show', $request->task_id)->with('success', 'Comment Created');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -84,7 +44,7 @@ class CommentsController extends Controller
             'title' => 'required',
             'body' => 'required',
         ]);
-
+            // fill
         $comment = Task_comment::find($id);
         $comment->title = $request->title;
         $comment->body = $request->body;
@@ -99,8 +59,9 @@ class CommentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $id) // object
     {
+        // gate / policy
         $comment = Task_comment::find($id);
         if(auth()->user()->id == $comment->user_id) {
             $comment->delete();

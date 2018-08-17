@@ -51,7 +51,6 @@
                         <div class="card-footer">
                             Created by {{ $project->user->name }} on {{ $project->created_at }}
                             <hr>
-                            @if(!Auth::guest())
                                 @if(Auth::user()->id == $project->user_id)
                                 @include('project.delete_button', ['item' => $project])
                                 <div class="dropup">
@@ -72,7 +71,6 @@
                                     </div>
                                 </div>
                                 @endif
-                            @endif
                         </div>
                     </div>
                     <br>
@@ -90,6 +88,8 @@
     <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
         
+        // on event
+
         $('textarea').each(function() {
             CKEDITOR.replace( $(this).attr('id') );
         });

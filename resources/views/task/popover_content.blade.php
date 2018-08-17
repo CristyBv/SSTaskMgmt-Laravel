@@ -1,5 +1,5 @@
 <div class="popover_content" style="display:none">
-    {!! Form::open(['action' => ['TasksController@forward'], 'method' => 'GET']) !!}
+    {!! Form::open(['route' => ['tasks.forward'], 'method' => 'POST']) !!}
         <div class="form-group popover_content_form_div"> </div>
     {!! Form::close() !!}
 </div>
