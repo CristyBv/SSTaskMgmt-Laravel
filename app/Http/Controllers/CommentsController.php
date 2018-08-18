@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Task_comment; // TaskComment
+use App\TaskComment;
 use App\Task;
 
 class CommentsController extends Controller
@@ -17,17 +17,11 @@ class CommentsController extends Controller
     public function store(Request $request, Task $task)
     {
         $this->validate($request, [
-            'title' => 'required|max:191', //modify
+            'title' => 'required|max:191',
             'body' => 'required',
         ]);
-        //$task->comments()->create(array_add($request->all(), 'user_id', $request->user()->id));
-        $comment = new Task_comment;
-        $comment->title = $request->title;
-        $comment->body = $request->body;
-        $comment->task_id = $request->task_id;
-        $comment->user_id = auth()->user()->id;
-        $comment->save();
-
+        
+        TaskComment::create(array_add($request->all(), 'user_id', $request->user()->id));
         return redirect()->route('tasks.show', $request->task_id)->with('success', 'Comment Created');
     }
 
@@ -38,17 +32,14 @@ class CommentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, TaskComment $comment)
     {
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
         ]);
-            // fill
-        $comment = Task_comment::find($id);
-        $comment->title = $request->title;
-        $comment->body = $request->body;
-        $comment->save();
+        
+        $comment->update($request->all());
     
         return redirect()->route('tasks.show', $request->task_id)->with('success', 'Comment Edited');
     }
@@ -59,10 +50,9 @@ class CommentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id) // object
+    public function destroy(Request $request, TaskComment $comment) // object
     {
         // gate / policy
-        $comment = Task_comment::find($id);
         if(auth()->user()->id == $comment->user_id) {
             $comment->delete();
             return redirect()->route('tasks.show', $request->task_id)->with('success', 'Comment Deleted');

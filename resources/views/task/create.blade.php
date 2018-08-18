@@ -7,7 +7,7 @@
     <a href=" {{ route('home') }}" class="btn btn-secondary">Go back</a>
     <br>
     <h1>Create a Task</h1>
-    {!! Form::open(['action' => 'TasksController@store', 'method' => 'POST', 'id' => 'createform']) !!}
+    {!! Form::open(['route' => 'tasks.store', 'method' => 'POST', 'id' => 'createform']) !!}
         <div class="row row-eq-height   ">
                 <div class="col-sm-7">
                         <div class="form-group">
@@ -28,7 +28,7 @@
                                                 </div>
                                         @endforeach
                                 </div>
-                                {{ Form::select('user', session('task_user'), null, ['class' => 'form-control', 'id' => 'user']) }}
+                                {{ Form::select('user_id', session('task_user'), null, ['class' => 'form-control', 'id' => 'user']) }}
                         </div>
                         <div class="form-group">
                                 {{ Form::label('chooseproject','Choose a Project') }}
@@ -44,7 +44,7 @@
                                                 </div>
                                         @endforeach
                                 </div>
-                                {{ Form::select('project', session('task_project'), null, ['class' => 'form-control', 'id' => 'project']) }}
+                                {{ Form::select('project_id', session('task_project'), null, ['class' => 'form-control', 'id' => 'project']) }}
                         </div>
                         <div class="form-group">
                                 {{ Form::label('choosepriority','Choose a Priority') }}
@@ -83,7 +83,7 @@
                         <div class="form-group">
                                 {{ Form::label('choosedeadline','Choose Deadline') }}
                                 <div id='datepicker'></div>
-                                {{ Form::hidden('date', session('task_date'), ['id' => 'deadline_date', 'data-last-deadline-date' => session('task_date')]) }}                                                           
+                                {{ Form::hidden('deadline', session('task_date'), ['id' => 'deadline_date', 'data-last-deadline-date' => session('task_date')]) }}                                                           
                         </div>
                         <div class="form-group">
                                 {{ Form::label('body','Description') }}

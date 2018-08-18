@@ -1,1 +1,0 @@
-<a href="{{ route('projects.edit', ['id'=> $item->id]) }}" class='btn btn-secondary float-left editform'>Edit</a>

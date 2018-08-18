@@ -52,13 +52,13 @@
                             Created by {{ $project->user->name }} on {{ $project->created_at }}
                             <hr>
                                 @if(Auth::user()->id == $project->user_id)
-                                @include('project.delete_button', ['item' => $project])
+                                @include('project.delete_button')
                                 <div class="dropup">
                                     <button type="button" class="btn btn-secondary dropdown-toggle float-right mr-3" data-toggle="dropdown">
                                         Edit
                                     </button>
                                     <div class="dropdown-menu">
-                                        {!! Form::open(['action' => ['ProjectsController@update', $project->id], 'method' => 'POST']) !!}
+                                        {!! Form::open(['route' => ['projects.update', $project], 'method' => 'POST']) !!}
                                             <div class="form-group">
                                                 {{ Form::text('title', $project->title, ['class' => 'form-control', 'placeholder' => 'Title']) }}
                                             </div>

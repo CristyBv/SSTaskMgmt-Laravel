@@ -5,7 +5,7 @@
     <a href=" {{ route('home') }}" class="btn btn-secondary">Go back</a>
     <br>
     <h1>Edit a Task</h1>
-    {!! Form::open(['action' => ['TasksController@update', $task->id], 'method' => 'POST']) !!}
+    {!! Form::open(['route' => ['tasks.update', $task], 'method' => 'POST']) !!}
         <div class="row row-eq-height">
             <div class="col-sm-7">            
                     <div class="form-group">
@@ -26,7 +26,7 @@
                                     </div>
                             @endforeach
                         </div>
-                        {{ Form::select('user', [$task->user_id => $task->user->name], $task->user_id, ['class' => 'form-control', 'id' => 'user']) }}
+                        {{ Form::select('user_id', [$task->user_id => $task->user->name], $task->user_id, ['class' => 'form-control', 'id' => 'user']) }}
                     </div>
                     <div class="form-group">
                         {{ Form::label('chooseproject','Choose a Project') }}
@@ -38,11 +38,11 @@
                                     @else
                                             <input type="radio" name="radioproject" value={{$id}} id="{{$id.$title}}" onchange="radiochange('radioproject', 'project');"/>
                                     @endif                                                        
-                                    <label for="{{$id.$title}}">{{$title}}</label>
+                                    <label for="{{ $id.$title }}">{{ $title }}</label>
                                 </div>
                             @endforeach
                         </div>
-                        {{ Form::select('project', [$task->project_id => $task->project->title], $task->project_id, ['class' => 'form-control', 'id' => 'project', 'disabled' => $readonly]) }}
+                        {{ Form::select('project_id', [$task->project_id => $task->project->title], $task->project_id, ['class' => 'form-control', 'id' => 'project', 'disabled' => $readonly]) }}
                     </div>
                     <div class="form-group">
                         {{ Form::label('choosepriority','Choose a Priority') }}
@@ -81,7 +81,7 @@
                     <div class="form-group">
                         {{ Form::label('choosedeadline','Choose Deadline') }}
                         <div id='datepicker'></div>
-                        {{ Form::hidden('date', $task->deadline, ['id' => 'deadline_date', 'data-last-deadline-date' => $task->deadline, 'readonly' => $readonly]) }}
+                        {{ Form::hidden('deadline', $task->deadline, ['id' => 'deadline_date', 'data-last-deadline-date' => $task->deadline, 'readonly' => $readonly]) }}
                     </div>
                     <div class="form-group">
                         {{ Form::label('body','Description') }}

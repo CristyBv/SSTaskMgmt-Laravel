@@ -34,9 +34,9 @@
             
         </div>
     </div>
-    @include('task.edit_button', ['item' => $task])
+    @include('task.edit_button')
     @if(Auth::user()->id == $task->creator_id)
-        @include('task.delete_button', ['item' => $task])                    
+        @include('task.delete_button')                    
     @endif
     <br>
     <hr>
@@ -45,7 +45,7 @@
             Create Comment
         </button>
         <div class="dropdown-menu">
-            {!! Form::open(['action' => 'CommentsController@store', 'method' => 'POST']) !!}
+            {!! Form::open(['route' => 'comments.store', 'method' => 'POST']) !!}
             <div class="form-group">
                 {{ Form::text('title','',['class' => 'form-control', 'placeholder' => 'Title']) }}
             </div>
@@ -64,7 +64,7 @@
                 <div class="card-header">
                     <p class="float-left">{{ $comment->title }}</p>
                     @if(Auth::user()->id == $comment->user_id)
-                        {!! Form::open(['action' => ['CommentsController@destroy', $comment->id], 'method' => 'POST', 'onsubmit' => 'return ConfirmDelete()']) !!}
+                        {!! Form::open(['route' => ['comments.destroy', $comment], 'method' => 'POST', 'onsubmit' => 'return ConfirmDelete()']) !!}
                             {{ Form::hidden('_method', 'DELETE') }}
                             {{ Form::hidden('task_id', $task->id) }}
                             {{ Form::submit('Delete', ['class' => 'btn btn-danger deleteform float-right']) }}
@@ -74,7 +74,7 @@
                                 Edit
                             </button>
                             <div class="dropdown-menu">
-                                {!! Form::open(['action' => ['CommentsController@update', $comment->id], 'method' => 'POST']) !!}
+                                {!! Form::open(['route' => ['comments.update', $comment], 'method' => 'POST']) !!}
                                     <div class="form-group">
                                         {{ Form::text('title', $comment->title,['class' => 'form-control', 'placeholder' => 'Title']) }}
                                     </div>

@@ -29,8 +29,6 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects = Project::orderBy('title')->paginate(5);
-
         // test if filter was ever used in this session
 
         if(!session()->has('filtredproject')) {
@@ -40,45 +38,26 @@ class ProjectsController extends Controller
                 'projectdesc' => null,
                 'projectsearch' => null,
             ]);
+            $projects = Project::orderBy('title')->paginate(Config::get('projects')['perPage']);
         } else {
-
-            // if it had been used, apply filter on and paginate the collection
-
-            $projectsort = session('projectsort');
+            $projectsort = session('projectsort');        
             if(session('projectdesc') != null) {
                 if($projectsort == 'user_id')
-                    $projects = Project::join('users', 'user_id', '=', 'users.id')->orderByDesc('users.name')->select('projects.*')->get();
-                else $projects = Project::all()->sortByDesc($projectsort);
+                    $projects = Project::join('users', 'user_id', '=', 'users.id')->orderByDesc('users.name')->select('projects.*')->with('user');
+                else $projects = Project::orderBy($projectsort, 'desc')->with('user');
             } else {
                 if($projectsort == 'user_id')
-                    $projects = Project::join('users', 'user_id', '=', 'users.id')->orderBy('users.name')->select('projects.*')->get();
-                else $projects = Project::all()->sortBy($projectsort);
+                    $projects = Project::join('users', 'user_id', '=', 'users.id')->orderBy('users.name')->select('projects.*')->with('user');
+                else $projects = Project::orderBy($projectsort)->with('user');
             }
-    
-            $searched = session('projectsearch');
-            if($searched != null || $searched != '')
-                $projects = $projects->filter(function ($value, $key) use ($searched) {
-                    return false !== stristr($value->title, $searched);
-                });
-    
-            $page = 1;
-            $perPage = 5;
-                
-            $paginator = new Paginator($projects->forPage($page, $perPage), count($projects), $perPage, $page);
 
-            return view('project.index')->with('projects', $paginator);
-        }   
+            if(session('projectsearch'))
+                $projects = $projects->where('title', 'like', '%'.$request->searchproject.'%');
+
+            $projects = $projects->paginate(Config::get('projects')['perPage']);          
+        } 
+        
         return view('project.index')->with('projects', $projects);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('project.create');
     }
 
     /**
@@ -90,42 +69,12 @@ class ProjectsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required',
+            'title' => 'required|max:191',
             'body' => 'required',
         ]);
 
-        $project = new Project;
-        $project->title = $request->title;
-        $project->body = $request->body;
-        $project->user_id = auth()->user()->id;
-        $project->save();
-
+        Project::create(array_add($request->all(), 'user_id', auth()->user()->id));        
         return redirect()->route('projects.index')->with('success', 'Project Created');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $project = Project::find($id);
-        if(auth()->user()->id === $project->user_id)
-            return view('project.edit')->with('project', $project);
-        else return redirect()->route('projects.index')->with('error', 'Unauthorized Page');
     }
 
     /**
@@ -135,18 +84,14 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Project $project)
     {
         $this->validate($request, [
-            'title' => 'required',
+            'title' => 'required|max:191',
             'body' => 'required',
         ]);
 
-        $project = Project::find($id);
-        $project->title = $request->title;
-        $project->body = $request->body;
-        $project->save();
-
+        $project->update($request->all());
         return redirect()->route('projects.index')->with('success', 'Task Updated');
     }
 
@@ -156,9 +101,8 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Project $project)
     {
-        $project = Project::find($id);
         if(auth()->user()->id === $project->user_id)
             $project->delete();
         else return redirect()->route('projects.index')->with('error', 'Unauthorized Page');
@@ -166,65 +110,23 @@ class ProjectsController extends Controller
         return redirect()->route('projects.index')->with('success', 'Project Removed');
     }
 
-    public function filter(Request $request) { // set session go index
-
-        // to take the user name and the project title, make a join
-        
-        if($request->projectdesc != null) {
-            if($request->sortproject == 'user_id')
-                $projects = Project::join('users', 'user_id', '=', 'users.id')->orderByDesc('users.name')->select('projects.*')->get();
-            else $projects = Project::all()->sortByDesc($request->sortproject);
-        } else {
-            if($request->sortproject == 'user_id')
-                $projects = Project::join('users', 'user_id', '=', 'users.id')->orderBy('users.name')->select('projects.*')->with('user');
-            else $projects = Project::orderBy($request->sortproject);
-        }
-
-        if($request->searchproject) {
-            $projects = $projects->where('title', 'like', '%'.$request->searchproject.'%');
-        }
-
-        $projects = $projects->paginate(Config::get('projects')['perPage']);
-
-        // $searched = $request->searchproject;
-        // if($searched != null)
-        //     $projects = $projects->filter(function ($value, $key) use ($searched) {
-        //         return false !== stristr($value->title, $searched);
-        //     });
-
-        // $page = $request->page;
-        // $perPage = Config::get('projects')['perPage'];
-
-        // $paginator = new Paginator($projects->forPage($page, $perPage), count($projects), $perPage, $page, [
-        //     'path'  => $request->url(),
-        //     'query' => $request->query(),
-        // ]);
-
-        session([
+    public function filter(Request $request) {
+       session([
             'filtredproject' => 'used',
             'projectsort' => $request->sortproject,
             'projectdesc' => $request->projectdesc,
             'projectsearch' => $request->searchproject,
         ]);
-        return view('project.index')->with('projects', $projects);
-        
+        return redirect()->route('projects.index');        
     }
 
     // function for ajax request to search
 
     public function search(Request $request) {
-        $what = $request->get('search');
-        if($what != '') {
-            $projects = DB::table('projects')->select('id', 'title as text')->where('title', 'like', '%'.$what.'%')->get();
+        $searched = $request->search;
+        if($searched != '') {
+            $projects = DB::table('projects')->select('id', 'title as text')->where('title', 'like', '%'.$searched.'%')->get();
             return $projects;
-            // $data = [];
-            // foreach($projects as $project) {
-            //     array_push($data, [
-            //         'id' => $project->id,
-            //         'text' => $project->title,
-            //     ]);
-            // }
-            // echo json_encode($data);
         }      
     }
 }

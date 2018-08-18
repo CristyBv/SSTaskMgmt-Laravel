@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Task;
 use App\User;
 use App\Project;
-use App\History_task;
-use App\Task_comment;
+use App\HistoryTask;
+use App\TaskComment;
 use Config;
 use DB;
 
@@ -254,15 +254,15 @@ class TasksController extends Controller
                             $content.= $tsk->$field->title;
                         else if($field == 'status')
                             if($myTask == false) $content.= Config::get($field)[$tsk->status];
-                            else $content.= view('task.status_select', ['item' => $tsk])->render();                            
+                            else $content.= view('task.status_select', ['task' => $tsk])->render();                            
                         else if($field == 'priorities')
                             $content.= Config::get($field)[$tsk->priority];
                         else $content.= $tsk->$field;
 
                         $content.= "</td>";
                     }
-                    if($myTask == false) $content.= "<td>" . view('task.edit_delete_button', ['item' => $tsk])->render() . "</td>";
-                    $content.= "<td>" . view('task.popover_content', ['item' => $tsk])->render() . "</td> </tr>";  
+                    if($myTask == false) $content.= "<td>" . view('task.edit_delete_button', ['task' => $tsk])->render() . "</td>";
+                    $content.= "<td>" . view('task.popover_content', ['task' => $tsk])->render() . "</td> </tr>";  
                 }                          
             }
             $content.= "</tbody> </table> </td> </tr>";
@@ -303,50 +303,30 @@ class TasksController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required',
+            'title' => 'required|max:191',
             'body' => 'required',
-            'user' => 'required',
-            'project' => 'required',
+            'user_id' => 'required',
+            'project_id' => 'required',
             'status' => 'required',
             'priority' => 'required',
-            'date' => 'required',
+            'deadline' => 'required',
         ]);
 
-        $user = User::find($request->user);
-        $project = Project::find($request->project);
+        $user = User::find($request->user_id);
+        $project = Project::find($request->project_id);
 
         session([
             'lasttask' => 'open',
-            'task_user' => [$request->user => $user->name],
-            'task_project' => [$request->project => $project->title],
+            'task_user' => [$request->user_id => $user->name],
+            'task_project' => [$request->project_id => $project->title],
             'task_status' => [$request->status => Config::get('status')[$request->status]],
             'task_priority' => [$request->priority => Config::get('priorities')[$request->priority]],
-            'task_date' => $request->date,
+            'task_date' => $request->deadline,
         ]);
 
         if($request->status != count(Config::get('status'))) {
-            $task = new Task;
-            $task->title = $request->title;
-            $task->body = $request->body;
-            $task->creator_id = $request->user()->id;
-            $task->user_id = $request->user;
-            $task->project_id = $request->project;
-            $task->status = $request->status;
-            $task->priority = $request->priority;
-            $task->deadline = $request->date;
-            $task->save();
-
-            $history = New History_task;
-            $history->task_id = $task->id;
-            $history->user_id = $task->user_id;
-            $history->forward_by = $task->creator_id;
-            $history->save();
-
-            $user->count++;
-            $user->save();
-            $project->count++;
-            $project->save();
-
+            $task = Task::create(array_add($request->all(), 'creator_id', auth()->user()->id));
+            HistoryTask::create(['task_id' => $task->id, 'user_id' => $task->user_id, 'forward_by' => $task->creator_id]);
             return redirect()->route('tasks.create')->with('success', 'Task Created');
         } else {
             return redirect()->route('tasks.create')->with('error', 'You can not create a task with an end status');
@@ -362,20 +342,10 @@ class TasksController extends Controller
      */
     public function show(Request $request, Task $task)
     {
-        // $task = Task::find($id);
-        $forwards = $task->history_tasks;
-        $comments = $task->comments->sortByDesc('created_at');
-
-        $page = $request->page;
-        $perPage = Config::get('comments')['perPage'];
-
-        $paginator = new Paginator($comments->forPage($page, $perPage), count($comments), $perPage, $page, [
-            'path'  => $request->url(),
-            'query' => $request->query(),
-        ]);
-
+        $forwards = $task->history_tasks()->with('user')->with('forward')->get();
+        $comments = $task->comments()->orderBy('created_at', 'desc')->with('user')->paginate(Config::get('comments')['perPage']);
         if(auth()->user()->id == $task->user_id || auth()->user()->id == $task->creator_id)
-            return view('task.show')->with('task', $task)->with('history', $forwards)->with('comments', $paginator);
+            return view('task.show')->with('task', $task)->with('history', $forwards)->with('comments', $comments);
         else return redirect()->route('home')->with('error', 'You have no rights to view that task');
     }
 
@@ -385,9 +355,8 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Task $task)
     {
-        $task = Task::find($id);
         $data = $this->create_data();
 
         // if the user is not the creator, he will not have total acces
@@ -406,36 +375,23 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Task $task)
     {
         $this->validate($request, [
-            'title' => 'required',
+            'title' => 'required|max:191',
             'body' => 'required',
         ]);
 
         $ok = 0;
-        $task = Task::find($id);
-        if($task->user_id != $request->user) $ok = 1;
-        $task->user_id = $request->user;
-        $task->status = $request->status;
-        $task->body = $request->body;
-        
-        if($task->creator_id == auth()->user()->id) {
-            $task->title = $request->title;
-            $task->creator_id = $request->user()->id;
-            $task->project_id = $request->project;
-            $task->priority = $request->priority;
-            $task->deadline = $request->date;
-        }
-        $task->save();
+        if($task->user_id != $request->user_id) $ok = 1;
 
-        if($ok == 1) {
-            $history = New History_task;
-            $history->task_id = $task->id;
-            $history->user_id = $task->user_id;
-            $history->forward_by = $request->user()->id;
-            $history->save();
-        }
+        $task->update(['user_id' => $request->user_id, 'status' => $request->status]);
+        
+        if($task->creator_id == auth()->user()->id)
+            $task->update($request->all());       
+
+        if($ok == 1)
+            HistoryTask::create(['task_id' => $task->id, 'user_id' => $task->user_id, 'forward_by' => auth()->user()->id]);
     
         return redirect()->route('home')->with('success', 'Task Updated');
     }
@@ -446,10 +402,8 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        $task = Task::find($id);
-
         if(auth()->user()->id == $task->user_id || auth()->user()->id == $task->creator_id) {
             $task->delete();
         }
@@ -464,34 +418,10 @@ class TasksController extends Controller
 
         // users and projects are sorted by count field (number of use)
 
-        // $users = array();
-        // $users_count = User::orderByDesc('count')->take(5)->get();
-        // foreach($users_count as $user) {
-        //     $var = [$user->id => $user->name];
-        //     $users = $users + $var;
-        // }
         $users = User::withCount('tasks')->orderByDesc('tasks_count')->take(5)->get()->pluck('name','id')->toArray();
-        
-        $projects = array();
-        $projects_count = Project::orderByDesc('count')->take(5)->get();
-        foreach($projects_count as $proj) {
-            $var = [$proj->id => $proj->title];
-            $projects = $projects + $var;
-        }
-
-        // in DB will be only the IDs of priorities and status
-            
-        $priorities = array();
-        foreach(Config::get('priorities') as $id => $pri) {
-            $var = [$id => $pri];
-            $priorities = $priorities + $var;
-        }
-
-        $status = array();
-        foreach(Config::get('status') as $id => $stat) {
-            $var = [$id => $stat];
-            $status = $status + $var;
-        }
+        $projects = Project::withCount('tasks')->orderByDesc('tasks_count')->take(5)->get()->pluck('title', 'id')->toArray(); 
+        $priorities = Config::get('priorities');        
+        $status = Config::get('status');
 
         $data = [
             'users' => $users,
@@ -532,12 +462,7 @@ class TasksController extends Controller
         if($task->user_id != $request->forwarduser) {    
             $task->user_id = $request->forwarduser;
             $task->save();
-            //$task->history_task()->create(...)
-            $history = new History_task;
-            $history->task_id = $task->id;
-            $history->user_id = $task->user_id;
-            $history->forward_by = $request->user()->id;
-            $history->save();
+            HistoryTask::create(['task_id' => $task->id, 'user_id' => $task->user_id, 'forward_by' => auth()->user()->id]);
             return redirect()->route('home')->with('success', "Task Forwarded");
         } else {
             return redirect()->route('home')->with('error', "You can't forward to the same user");
@@ -548,30 +473,21 @@ class TasksController extends Controller
 
     public function search(Request $request) {
 
-        $what = $request->get('search');
-        if($what != '') {
+        $searched = $request->search;
+        if($searched != '') {
             $authId = auth()->user()->id;
-            $tasks = DB::table('tasks')->where('title', 'like', '%'.$what.'%')->where(function($query) use ($authId) {
+            $tasks = DB::table('tasks')->select('id', 'title as text')->where('title', 'like', '%'.$searched.'%')->where(function($query) use ($authId) {
                 $query->where('creator_id', auth()->user()->id)->orWhere('user_id', auth()->user()->id);
             })->get();
-            $data = [];
-            foreach($tasks as $task) {
-                array_push($data, [
-                    'id' => $task->id,
-                    'text' => $task->title,
-                ]);
-            }
-            echo json_encode($data);
+            return $tasks;
         }      
     }
 
     // change the status of a task
 
     public function changestatus(Request $request, Task $task) {
-        // $task = Task::find($request->id);
         $task->status = $request->selectstatus;
         $task->save();
         return redirect()->route('home')->with('success', 'Status Updated');
     }
-
 }

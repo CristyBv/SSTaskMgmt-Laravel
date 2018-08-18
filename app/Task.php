@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
+    protected $fillable = ['title', 'body', 'status', 'deadline', 'priority', 'user_id', 'project_id', 'creator_id'];
+
     public function user(){
         return $this->belongsTo('App\User');
     }
@@ -20,10 +22,10 @@ class Task extends Model
     }
 
     public function history_tasks(){
-        return $this->hasMany('App\History_task');
+        return $this->hasMany('App\HistoryTask');
     }
 
     public function comments(){
-        return $this->hasMany('App\Task_Comment');
+        return $this->hasMany('App\TaskComment');
     }
 }

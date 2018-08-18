@@ -30,6 +30,6 @@ Route::get('/projects_search', 'ProjectsController@search')->name('projects.sear
 
 Route::get('/users_search', 'UsersController@search')->name('users.search');
 
-Route::resource('/comments', 'CommentsController'); // make only used methods (EXCEPTIONS)
+Route::resource('/comments', 'CommentsController')->only(['store', 'update', 'destroy']); // make only used methods (EXCEPTIONS)
 
 Auth::routes();

@@ -4,9 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Task_comment extends Model
+class TaskComment extends Model
 {
-    protected $fillable = ['title', 'body', 'user_id'];
+    protected $fillable = ['title', 'body', 'user_id', 'task_id'];
+    protected $table = 'task_comments';
 
     public function tasks() {
         return $this->belongsTo('App\Task');

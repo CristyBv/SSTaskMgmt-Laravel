@@ -67,14 +67,14 @@ class User extends Authenticatable
     }
 
     public function history(){
-        return $this->hasMany('App\History_task');
+        return $this->hasMany('App\HistoryTask');
     }
 
     public function forward(){
-        return $this->hasMany('App\History_task', 'forward_by');
+        return $this->hasMany('App\HistoryTask', 'forward_by');
     }
 
     public function comments(){
-        return $this->hasMany('App\Task_Comment');
+        return $this->hasMany('App\TaskComment');
     }
 }
